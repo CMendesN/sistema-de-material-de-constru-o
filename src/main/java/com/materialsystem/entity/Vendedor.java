@@ -1,4 +1,4 @@
-package src.main.java.entity;
+package com.materialsystem.entity;
 /*
  * há os papéis do gerente, vendedor, caixa;
 */
