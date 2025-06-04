@@ -6,6 +6,13 @@
             "name": "Main",
             "request": "launch",
             "mainClass": "com.materialsystem.Main",
+            "projectName": "materialsystem"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "com.materialsystem.Main",
             "projectName": "sistema-de-material-de-constru-o_68617a4f"
         },
         {
