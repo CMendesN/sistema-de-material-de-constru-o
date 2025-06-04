@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "com.materialsystem.Main",
+            "projectName": "sistema-de-material-de-constru-o_68617a4f"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "sistema-de-material-de-constru-o_68617a4f"
+        },
+        {
+            "type": "java",
+            "name": "Executar Sistema",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "sistema-de-material-de-constru-o"
+        }
+    ]
+}
