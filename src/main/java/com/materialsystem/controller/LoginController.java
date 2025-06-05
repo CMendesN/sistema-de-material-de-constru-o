@@ -2,17 +2,13 @@ package com.materialsystem.controller;
 
 import com.materialsystem.dao.UsuarioDAO;
 import com.materialsystem.entity.Usuario;
+import com.materialsystem.util.PasswordUtils;
 import com.materialsystem.view.LoginView;
 
 public class LoginController {
 
-    private LoginView view;
-    private UsuarioDAO dao;
-
-    public LoginController() {
-        this.view = new LoginView();
-        this.dao = new UsuarioDAO();
-    }
+    private final LoginView view = new LoginView();
+    private final UsuarioDAO dao = new UsuarioDAO();
 
     public Usuario autenticarUsuario() {
         while (true) {
@@ -22,7 +18,7 @@ public class LoginController {
 
             Usuario usuario = dao.buscarPorUsername(username);
 
-            if (usuario != null && usuario.getSenha().equals(senha)) {
+            if (usuario != null && PasswordUtils.verificarSenha(senha, usuario.getSenha())) {
                 view.exibirMensagem("Login realizado com sucesso! Bem-vindo, " + usuario.getNome());
                 return usuario;
             } else {

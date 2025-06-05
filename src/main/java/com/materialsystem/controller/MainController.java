@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class MainController {
 
     private final LoginController loginController = new LoginController();
+    private final UsuarioController usuarioController = new UsuarioController();
 
     public void iniciarAplicacao() {
         Usuario usuario = loginController.autenticarUsuario();
@@ -23,9 +24,11 @@ public class MainController {
             System.out.println("6 - Gerenciar Compradores");
             System.out.println("7 - Gerenciar Vendas");
             System.out.println("8 - Gerenciar Itens de Venda");
+            System.out.println("9 - Cadastrar Novo Usuário");  // <-- NOVO
             System.out.println("0 - Sair");
 
             int opcao = scanner.nextInt();
+            scanner.nextLine();
 
             switch (opcao) {
                 case 1 -> new ProdutoController().gerenciarProdutos();
@@ -36,6 +39,7 @@ public class MainController {
                 case 6 -> new CompradorController().gerenciarCompradores();
                 case 7 -> new VendaController().gerenciarVendas();
                 case 8 -> new ItemVendaController().gerenciarItensVenda();
+                case 9 -> usuarioController.cadastrarUsuario();  // <-- NOVA OPÇÃO
                 case 0 -> {
                     System.out.println("Encerrando...");
                     return;

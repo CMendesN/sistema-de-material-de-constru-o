@@ -1,9 +1,0 @@
-com\materialsystem\entity\Comprador.class
-com\materialsystem\entity\Produto.class
-com\materialsystem\util\DatabaseConnection.class
-com\materialsystem\dao\ProdutoDAO.class
-com\materialsystem\Main.class
-com\materialsystem\view\ProdutoView.class
-com\materialsystem\entity\Vendedor.class
-com\materialsystem\entity\Estoque.class
-com\materialsystem\controller\ProdutoController.class
