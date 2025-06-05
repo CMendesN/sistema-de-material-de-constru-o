@@ -9,10 +9,10 @@ public class UsuarioController {
     private final UsuarioView view = new UsuarioView();
     private final UsuarioDAO dao = new UsuarioDAO();
 
+    // Fluxo normal para o menu
     public void cadastrarUsuario() {
         Usuario usuario = view.solicitarCadastroUsuario();
 
-        // Verifica se username já existe
         if (dao.buscarPorUsername(usuario.getUsername()) != null) {
             view.exibirMensagem("Erro: Username já existente. Cadastro cancelado.");
             return;
@@ -20,5 +20,18 @@ public class UsuarioController {
 
         dao.inserir(usuario);
         view.exibirMensagem("Usuário cadastrado com sucesso!");
+    }
+
+    // Fluxo especial da primeira execução
+    public void cadastrarUsuarioInicial() {
+        Usuario usuario = view.solicitarCadastroInicial();
+
+        if (dao.buscarPorUsername(usuario.getUsername()) != null) {
+            view.exibirMensagem("Erro: Username já existente. Cadastro cancelado.");
+            return;
+        }
+
+        dao.inserir(usuario);
+        view.exibirMensagem("Usuário administrador (Gerente) cadastrado com sucesso!");
     }
 }

@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class UsuarioView {
     private final Scanner scanner = new Scanner(System.in);
 
+    // Fluxo normal (com papel sendo escolhido)
     public Usuario solicitarCadastroUsuario() {
         String nome = solicitarNome();
         String username = solicitarUsername();
@@ -16,6 +17,17 @@ public class UsuarioView {
         String senha = solicitarSenhaComValidacao();
 
         return new Usuario(0, nome, username, senha, papel);
+    }
+
+    // NOVO: Fluxo de cadastro inicial (sem perguntar papel)
+    public Usuario solicitarCadastroInicial() {
+        System.out.println("=== Cadastro Inicial de Administrador (Gerente) ===");
+
+        String nome = solicitarNome();
+        String username = solicitarUsername();
+        String senha = solicitarSenhaComValidacao();
+
+        return new Usuario(0, nome, username, senha, "Gerente");
     }
 
     private String solicitarNome() {
