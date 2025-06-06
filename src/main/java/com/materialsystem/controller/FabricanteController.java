@@ -1,11 +1,11 @@
 package com.materialsystem.controller;
 
+import java.util.List;
+
 import com.materialsystem.dao.FabricanteDAO;
 import com.materialsystem.entity.Fabricante;
+import com.materialsystem.util.ConsoleInputUtils;
 import com.materialsystem.view.FabricanteView;
-
-import java.util.List;
-import java.util.Scanner;
 
 public class FabricanteController {
 
@@ -18,15 +18,15 @@ public class FabricanteController {
     }
 
     public void gerenciarFabricantes() {
-        Scanner scanner = new Scanner(System.in);
+        
         while (true) {
             System.out.println("\n--- Menu Fabricante ---");
             System.out.println("1 - Inserir Fabricante");
             System.out.println("2 - Listar Fabricantes");
             System.out.println("0 - Voltar");
 
-            int opcao = scanner.nextInt();
-            scanner.nextLine(); // Limpar buffer
+            int opcao = ConsoleInputUtils.lerInt("Escolha: ");
+            // Limpar buffer
 
             switch (opcao) {
                 case 1:

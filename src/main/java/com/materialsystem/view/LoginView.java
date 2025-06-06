@@ -1,18 +1,18 @@
 package com.materialsystem.view;
 
-import java.util.Scanner;
+import com.materialsystem.util.ConsoleInputUtils;
 
 public class LoginView {
-    private Scanner scanner = new Scanner(System.in);
+    
 
     public String solicitarUsername() {
         System.out.print("Usuário: ");
-        return scanner.nextLine();
+        return ConsoleInputUtils.lerString();
     }
 
     public String solicitarSenha() {
         System.out.print("Senha: ");
-        return scanner.nextLine();
+        return ConsoleInputUtils.lerString();
     }
 
     public void exibirMensagem(String mensagem) {

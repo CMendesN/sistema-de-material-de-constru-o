@@ -1,10 +1,11 @@
 package com.materialsystem.controller;
 
+import java.util.List;
+
 import com.materialsystem.dao.ProdutoDAO;
 import com.materialsystem.entity.Produto;
+import com.materialsystem.util.ConsoleInputUtils;
 import com.materialsystem.view.ProdutoView;
-
-import java.util.List;
 
 public class ProdutoController {
 
@@ -23,8 +24,7 @@ public class ProdutoController {
             System.out.println("2 - Listar Produtos");
             System.out.println("0 - Sair");
 
-            int opcao = new java.util.Scanner(System.in).nextInt();
-
+            int opcao = ConsoleInputUtils.lerInt("Escolha: ");
             switch (opcao) {
                 case 1:
                     Produto produto = produtoView.solicitarDadosNovoProduto();

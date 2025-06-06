@@ -1,25 +1,24 @@
 package com.materialsystem.view;
 
-import com.materialsystem.entity.Venda;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Scanner;
+
+import com.materialsystem.entity.Venda;
+import com.materialsystem.util.ConsoleInputUtils;
 
 public class VendaView {
-    private Scanner scanner = new Scanner(System.in);
+    
 
     public Venda solicitarDadosNovaVenda() {
         System.out.print("ID do Vendedor (ou 0 se não houver): ");
-        int idVendedor = scanner.nextInt();
+        int idVendedor = ConsoleInputUtils.lerInt("Escolha: ");
 
         System.out.print("ID do Comprador (ou 0 se não houver): ");
-        int idComprador = scanner.nextInt();
+        int idComprador = ConsoleInputUtils.lerInt("Escolha: ");
 
-        System.out.print("Valor total: ");
-        double valorTotal = scanner.nextDouble();
-        scanner.nextLine();
-
+        
+        double valorTotal = ConsoleInputUtils.lerDouble("Valor total: ");
+        
         Integer idVendedorFinal = (idVendedor == 0) ? null : idVendedor;
         Integer idCompradorFinal = (idComprador == 0) ? null : idComprador;
 

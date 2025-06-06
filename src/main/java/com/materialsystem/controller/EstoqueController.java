@@ -1,11 +1,11 @@
 package com.materialsystem.controller;
 
+import java.util.List;
+
 import com.materialsystem.dao.EstoqueDAO;
 import com.materialsystem.entity.Estoque;
+import com.materialsystem.util.ConsoleInputUtils;
 import com.materialsystem.view.EstoqueView;
-
-import java.util.List;
-import java.util.Scanner;
 
 public class EstoqueController {
 
@@ -18,15 +18,15 @@ public class EstoqueController {
     }
 
     public void gerenciarEstoques() {
-        Scanner scanner = new Scanner(System.in);
+        
         while (true) {
             System.out.println("\n--- Menu Estoque ---");
             System.out.println("1 - Inserir Estoque");
             System.out.println("2 - Listar Estoques");
             System.out.println("0 - Voltar");
 
-            int opcao = scanner.nextInt();
-            scanner.nextLine(); // Limpar buffer
+            int opcao = ConsoleInputUtils.lerInt("Escolha: ");
+            // Limpar buffer
 
             switch (opcao) {
                 case 1:

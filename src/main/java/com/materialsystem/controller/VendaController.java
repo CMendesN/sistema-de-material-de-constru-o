@@ -1,12 +1,11 @@
 package com.materialsystem.controller;
 
+import java.util.List;
+
 import com.materialsystem.dao.VendaDAO;
 import com.materialsystem.entity.Venda;
+import com.materialsystem.util.ConsoleInputUtils;
 import com.materialsystem.view.VendaView;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Scanner;
 
 public class VendaController {
 
@@ -19,15 +18,15 @@ public class VendaController {
     }
 
     public void gerenciarVendas() {
-        Scanner scanner = new Scanner(System.in);
+        
         while (true) {
             System.out.println("\n--- Menu Venda ---");
             System.out.println("1 - Inserir Venda");
             System.out.println("2 - Listar Vendas");
             System.out.println("0 - Voltar");
 
-            int opcao = scanner.nextInt();
-            scanner.nextLine(); // limpar buffer
+            int opcao = ConsoleInputUtils.lerInt("Escolha: ");
+            // limpar buffer
 
             switch (opcao) {
                 case 1:

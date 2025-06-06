@@ -6,6 +6,7 @@
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/dao/ProdutoEstoqueDAO.java
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/entity/Comprador.java
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/dao/ProdutoDAO.java
+/home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/util/DatabaseInitializer.java
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/view/FabricanteView.java
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/entity/Venda.java
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/util/PasswordUtils.java
@@ -17,6 +18,7 @@
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/controller/LoginController.java
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/entity/Usuario.java
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/view/VendaView.java
+/home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/view/UsuarioView.java
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/controller/CompradorController.java
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/view/VendedorView.java
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/entity/Fabricante.java
@@ -30,6 +32,7 @@
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/view/ProdutoEstoqueView.java
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/dao/VendaDAO.java
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/entity/Estoque.java
+/home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/controller/UsuarioController.java
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/controller/VendaController.java
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/view/ProdutoView.java
 /home/carlos/Documentos/PDS/sistema-de-material-de-constru-o/src/main/java/com/materialsystem/view/LoginView.java

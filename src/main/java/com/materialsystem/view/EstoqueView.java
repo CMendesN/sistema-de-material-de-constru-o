@@ -1,20 +1,19 @@
 package com.materialsystem.view;
 
-import com.materialsystem.entity.Estoque;
-
 import java.util.List;
-import java.util.Scanner;
+
+import com.materialsystem.entity.Estoque;
+import com.materialsystem.util.ConsoleInputUtils;
 
 public class EstoqueView {
-    private Scanner scanner = new Scanner(System.in);
+    
 
     public Estoque solicitarDadosNovoEstoque() {
         System.out.print("Localização do estoque: ");
-        String localizacao = scanner.nextLine();
+        String localizacao= ConsoleInputUtils.lerString();
 
-        System.out.print("Capacidade: ");
-        double capacidade = scanner.nextDouble();
-        scanner.nextLine(); // limpar buffer
+        double capacidade = ConsoleInputUtils.lerDouble("Capacidade: ");
+        
 
         return new Estoque(0, localizacao, capacidade);
     }

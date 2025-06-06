@@ -68,4 +68,24 @@ public class ProdutoEstoqueDAO {
             e.printStackTrace();
         }
     }
+    public boolean existeAssociacao(int idProduto, int idEstoque) {
+    String sql = "SELECT COUNT(*) FROM ProdutoEstoque WHERE id_produto = ? AND id_estoque = ?";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setInt(1, idProduto);
+        stmt.setInt(2, idEstoque);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+
 }

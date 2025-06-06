@@ -1,22 +1,22 @@
 package com.materialsystem.view;
 
-import com.materialsystem.entity.Fabricante;
-
 import java.util.List;
-import java.util.Scanner;
+
+import com.materialsystem.entity.Fabricante;
+import com.materialsystem.util.ConsoleInputUtils;
 
 public class FabricanteView {
-    private Scanner scanner = new Scanner(System.in);
+    
 
     public Fabricante solicitarDadosNovoFabricante() {
         System.out.print("Nome do fabricante: ");
-        String nome = scanner.nextLine();
+        String nome= ConsoleInputUtils.lerString();
 
         System.out.print("Contato: ");
-        String contato = scanner.nextLine();
+        String contato= ConsoleInputUtils.lerString();
 
         System.out.print("Endereço: ");
-        String endereco = scanner.nextLine();
+        String endereco= ConsoleInputUtils.lerString();
 
         return new Fabricante(0, nome, contato, endereco);
     }

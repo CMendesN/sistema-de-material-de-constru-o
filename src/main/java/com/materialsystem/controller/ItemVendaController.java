@@ -1,32 +1,25 @@
 package com.materialsystem.controller;
 
+import java.util.List;
+
 import com.materialsystem.dao.ItemVendaDAO;
 import com.materialsystem.entity.ItemVenda;
+import com.materialsystem.util.ConsoleInputUtils;
 import com.materialsystem.view.ItemVendaView;
-
-import java.util.List;
-import java.util.Scanner;
 
 public class ItemVendaController {
 
-    private ItemVendaView view;
-    private ItemVendaDAO dao;
-
-    public ItemVendaController() {
-        this.view = new ItemVendaView();
-        this.dao = new ItemVendaDAO();
-    }
+    private final ItemVendaView view = new ItemVendaView();
+    private final ItemVendaDAO dao = new ItemVendaDAO();
 
     public void gerenciarItensVenda() {
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("\n--- Menu Itens da Venda ---");
             System.out.println("1 - Inserir Item em Venda");
             System.out.println("2 - Listar Itens de uma Venda");
             System.out.println("0 - Voltar");
 
-            int opcao = scanner.nextInt();
-            scanner.nextLine(); // limpar buffer
+            int opcao = ConsoleInputUtils.lerInt("Escolha: ");
 
             switch (opcao) {
                 case 1:
@@ -35,10 +28,9 @@ public class ItemVendaController {
                     view.exibirMensagem("Item inserido com sucesso!");
                     break;
                 case 2:
-                    System.out.print("Informe o ID da Venda: ");
-                    int idVenda = scanner.nextInt();
-                    List<ItemVenda> lista = dao.buscarPorVenda(idVenda);
-                    view.exibirListaItensVenda(lista);
+                    int idVenda = ConsoleInputUtils.lerInt("Informe o ID da Venda: ");
+                    List<ItemVenda> itens = dao.buscarPorVenda(idVenda);
+                    view.exibirListaItensVenda(itens);
                     break;
                 case 0:
                     return;

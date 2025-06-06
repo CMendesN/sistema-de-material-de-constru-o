@@ -1,30 +1,29 @@
 package com.materialsystem.view;
 
-import com.materialsystem.entity.Comprador;
-
 import java.util.List;
-import java.util.Scanner;
+
+import com.materialsystem.entity.Comprador;
+import com.materialsystem.util.ConsoleInputUtils;
 
 public class CompradorView {
-    private Scanner scanner = new Scanner(System.in);
+    
 
     public Comprador solicitarDadosNovoComprador() {
         System.out.print("Nome: ");
-        String nome = scanner.nextLine();
+        String nome= ConsoleInputUtils.lerString();
 
         System.out.print("CPF: ");
-        String cpf = scanner.nextLine();
+        String cpf= ConsoleInputUtils.lerString();
 
         System.out.print("Contato: ");
-        String contato = scanner.nextLine();
+        String contato= ConsoleInputUtils.lerString();
 
         System.out.print("Endereço: ");
-        String endereco = scanner.nextLine();
+        String endereco= ConsoleInputUtils.lerString();
 
         System.out.print("ID do usuário (ou 0 se não houver): ");
-        int idUsuario = scanner.nextInt();
-        scanner.nextLine();
-
+        int idUsuario = ConsoleInputUtils.lerInt("Escolha: ");
+        
         Integer idUsuarioFinal = (idUsuario == 0) ? null : idUsuario;
 
         return new Comprador(0, nome, cpf, contato, endereco, idUsuarioFinal);

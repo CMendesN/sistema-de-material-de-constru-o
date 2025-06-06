@@ -1,13 +1,13 @@
 package com.materialsystem.view;
 
+import java.util.List;
+
 import com.materialsystem.entity.Usuario;
+import com.materialsystem.util.ConsoleInputUtils;
 import com.materialsystem.util.PasswordUtils;
 
-import java.util.List;
-import java.util.Scanner;
-
 public class UsuarioView {
-    private final Scanner scanner = new Scanner(System.in);
+    
 
     // Fluxo normal (com papel sendo escolhido)
     public Usuario solicitarCadastroUsuario() {
@@ -32,18 +32,18 @@ public class UsuarioView {
 
     private String solicitarNome() {
         System.out.print("Nome completo: ");
-        return scanner.nextLine();
+        return ConsoleInputUtils.lerString();
     }
 
     private String solicitarUsername() {
         System.out.print("Username (único): ");
-        return scanner.nextLine();
+        return ConsoleInputUtils.lerString();
     }
 
     private String solicitarPapel() {
         while (true) {
             System.out.print("Papel (Gerente, Vendedor, Comprador, Caixa): ");
-            String papel = scanner.nextLine().trim();
+            String papel = ConsoleInputUtils.lerString().trim();
 
             if (papel.equalsIgnoreCase("Gerente") || papel.equalsIgnoreCase("Vendedor")
                     || papel.equalsIgnoreCase("Comprador") || papel.equalsIgnoreCase("Caixa")) {
@@ -59,7 +59,7 @@ public class UsuarioView {
 
         while (true) {
             System.out.print("Senha: ");
-            senha = scanner.nextLine();
+            senha= ConsoleInputUtils.lerString();
 
             List<String> erros = PasswordUtils.validarForcaSenha(senha);
 
@@ -71,7 +71,7 @@ public class UsuarioView {
             erros.forEach(System.out::println);
 
             System.out.print("Deseja tentar novamente? (S/N): ");
-            String opcao = scanner.nextLine();
+            String opcao= ConsoleInputUtils.lerString();
             if (!opcao.equalsIgnoreCase("S")) {
                 System.out.println("Cadastro de usuário cancelado.");
                 System.exit(0);

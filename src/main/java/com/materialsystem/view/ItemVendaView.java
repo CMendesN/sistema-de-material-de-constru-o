@@ -1,27 +1,26 @@
 package com.materialsystem.view;
 
-import com.materialsystem.entity.ItemVenda;
-
 import java.util.List;
-import java.util.Scanner;
+
+import com.materialsystem.entity.ItemVenda;
+import com.materialsystem.util.ConsoleInputUtils;
 
 public class ItemVendaView {
-    private Scanner scanner = new Scanner(System.in);
+    
 
     public ItemVenda solicitarDadosNovoItemVenda() {
         System.out.print("ID da Venda: ");
-        int idVenda = scanner.nextInt();
+        int idVenda = ConsoleInputUtils.lerInt("Escolha: ");
 
         System.out.print("ID do Produto: ");
-        int idProduto = scanner.nextInt();
+        int idProduto = ConsoleInputUtils.lerInt("Escolha: ");
 
         System.out.print("Quantidade: ");
-        int quantidade = scanner.nextInt();
+        int quantidade = ConsoleInputUtils.lerInt("Escolha: ");
 
-        System.out.print("Preço unitário da venda: ");
-        double precoUnitarioVenda = scanner.nextDouble();
+        double precoUnitarioVenda = ConsoleInputUtils.lerDouble("Preço unitário da venda: ");
 
-        scanner.nextLine(); // limpar buffer
+        // limpar buffer
 
         return new ItemVenda(0, idVenda, idProduto, quantidade, precoUnitarioVenda);
     }

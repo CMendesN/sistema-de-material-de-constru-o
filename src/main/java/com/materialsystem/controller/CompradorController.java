@@ -1,11 +1,11 @@
 package com.materialsystem.controller;
 
+import java.util.List;
+
 import com.materialsystem.dao.CompradorDAO;
 import com.materialsystem.entity.Comprador;
+import com.materialsystem.util.ConsoleInputUtils;
 import com.materialsystem.view.CompradorView;
-
-import java.util.List;
-import java.util.Scanner;
 
 public class CompradorController {
 
@@ -18,15 +18,15 @@ public class CompradorController {
     }
 
     public void gerenciarCompradores() {
-        Scanner scanner = new Scanner(System.in);
+        
         while (true) {
             System.out.println("\n--- Menu Comprador ---");
             System.out.println("1 - Inserir Comprador");
             System.out.println("2 - Listar Compradores");
             System.out.println("0 - Voltar");
 
-            int opcao = scanner.nextInt();
-            scanner.nextLine(); // limpar buffer
+            int opcao = ConsoleInputUtils.lerInt("Escolha: ");
+            // limpar buffer
 
             switch (opcao) {
                 case 1:

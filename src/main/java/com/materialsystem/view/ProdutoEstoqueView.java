@@ -1,24 +1,24 @@
 package com.materialsystem.view;
 
-import com.materialsystem.entity.ProdutoEstoque;
-
 import java.util.List;
-import java.util.Scanner;
+
+import com.materialsystem.entity.ProdutoEstoque;
+import com.materialsystem.util.ConsoleInputUtils;
 
 public class ProdutoEstoqueView {
-    private Scanner scanner = new Scanner(System.in);
+    
 
     public ProdutoEstoque solicitarDadosNovoProdutoEstoque() {
         System.out.print("ID Produto: ");
-        int idProduto = scanner.nextInt();
+        int idProduto = ConsoleInputUtils.lerInt("Escolha: ");
 
         System.out.print("ID Estoque: ");
-        int idEstoque = scanner.nextInt();
+        int idEstoque = ConsoleInputUtils.lerInt("Escolha: ");
 
         System.out.print("Quantidade: ");
-        int quantidade = scanner.nextInt();
+        int quantidade = ConsoleInputUtils.lerInt("Escolha: ");
 
-        scanner.nextLine(); // limpar buffer
+        // limpar buffer
 
         return new ProdutoEstoque(idProduto, idEstoque, quantidade);
     }

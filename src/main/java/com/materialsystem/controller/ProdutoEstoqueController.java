@@ -1,47 +1,47 @@
 package com.materialsystem.controller;
 
+import java.util.List;
+
 import com.materialsystem.dao.ProdutoEstoqueDAO;
 import com.materialsystem.entity.ProdutoEstoque;
+import com.materialsystem.util.ConsoleInputUtils;
 import com.materialsystem.view.ProdutoEstoqueView;
-
-import java.util.List;
-import java.util.Scanner;
 
 public class ProdutoEstoqueController {
 
-    private ProdutoEstoqueView view;
-    private ProdutoEstoqueDAO dao;
-
-    public ProdutoEstoqueController() {
-        this.view = new ProdutoEstoqueView();
-        this.dao = new ProdutoEstoqueDAO();
-    }
+    private final ProdutoEstoqueView view = new ProdutoEstoqueView();
+    private final ProdutoEstoqueDAO dao = new ProdutoEstoqueDAO();
 
     public void gerenciarProdutoEstoque() {
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("\n--- Menu Produto-Estoque ---");
             System.out.println("1 - Inserir Associação");
             System.out.println("2 - Listar por Produto");
             System.out.println("0 - Voltar");
 
-            int opcao = scanner.nextInt();
-            scanner.nextLine(); // limpar buffer
+            int opcao = ConsoleInputUtils.lerInt("Escolha: ");
 
             switch (opcao) {
                 case 1:
                     ProdutoEstoque pe = view.solicitarDadosNovoProdutoEstoque();
-                    dao.inserir(pe);
-                    view.exibirMensagem("Associação inserida com sucesso!");
+
+                    if (dao.existeAssociacao(pe.getIdProduto(), pe.getIdEstoque())) {
+                        view.exibirMensagem("Erro: já existe associação deste produto com este estoque.");
+                    } else {
+                        dao.inserir(pe);
+                        view.exibirMensagem("Associação inserida com sucesso!");
+                    }
                     break;
+
                 case 2:
-                    System.out.print("Informe o ID do Produto: ");
-                    int idProduto = scanner.nextInt();
+                    int idProduto = ConsoleInputUtils.lerInt("Informe o ID do Produto: ");
                     List<ProdutoEstoque> lista = dao.buscarPorProduto(idProduto);
                     view.exibirListaAssociacoes(lista);
                     break;
+
                 case 0:
                     return;
+
                 default:
                     view.exibirMensagem("Opção inválida.");
             }

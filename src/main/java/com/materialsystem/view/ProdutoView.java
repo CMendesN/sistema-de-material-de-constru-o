@@ -1,33 +1,33 @@
 package com.materialsystem.view;
 
-import com.materialsystem.entity.Produto;
-
 import java.util.List;
-import java.util.Scanner;
+
+import com.materialsystem.entity.Produto;
+import com.materialsystem.util.ConsoleInputUtils;
 
 public class ProdutoView {
 
-    private Scanner scanner = new Scanner(System.in);
+    
 
     public Produto solicitarDadosNovoProduto() {
         System.out.print("Nome: ");
-        String nome = scanner.nextLine();
+        String nome= ConsoleInputUtils.lerString();
 
         System.out.print("Descrição: ");
-        String descricao = scanner.nextLine();
+        String descricao= ConsoleInputUtils.lerString();
 
-        System.out.print("Preço Unitário: ");
-        double precoUnitario = scanner.nextDouble();
+        
+        double precoUnitario = ConsoleInputUtils.lerDouble("Preço Unitário: ");
 
         System.out.print("Quantidade em Estoque: ");
-        int quantidade = scanner.nextInt();
+        int quantidade = ConsoleInputUtils.lerInt("Escolha: ");
 
         System.out.print("ID Fabricante: ");
-        int idFabricante = scanner.nextInt();
-        scanner.nextLine(); // limpeza do buffer
+        int idFabricante = ConsoleInputUtils.lerInt("Escolha: ");
+        // limpeza do buffer
 
         System.out.print("Categoria: ");
-        String categoria = scanner.nextLine();
+        String categoria= ConsoleInputUtils.lerString();
 
         return new Produto(0, nome, descricao, precoUnitario, quantidade, idFabricante, categoria);
     }

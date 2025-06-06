@@ -1,8 +1,7 @@
 package com.materialsystem.controller;
 
 import com.materialsystem.entity.Usuario;
-
-import java.util.Scanner;
+import com.materialsystem.util.ConsoleInputUtils;
 
 public class MainController {
 
@@ -12,7 +11,7 @@ public class MainController {
     public void iniciarAplicacao() {
         Usuario usuario = loginController.autenticarUsuario();
 
-        Scanner scanner = new Scanner(System.in);
+        
         while (true) {
             System.out.println("\n=== Menu Principal ===");
             System.out.println("Papel: " + usuario.getPapel());
@@ -27,9 +26,8 @@ public class MainController {
             System.out.println("9 - Cadastrar Novo Usuário");  // <-- NOVO
             System.out.println("0 - Sair");
 
-            int opcao = scanner.nextInt();
-            scanner.nextLine();
-
+            int opcao = ConsoleInputUtils.lerInt("Escolha: ");
+            
             switch (opcao) {
                 case 1 -> new ProdutoController().gerenciarProdutos();
                 case 2 -> new FabricanteController().gerenciarFabricantes();

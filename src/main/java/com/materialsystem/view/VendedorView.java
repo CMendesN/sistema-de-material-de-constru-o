@@ -1,38 +1,50 @@
 package com.materialsystem.view;
 
-import com.materialsystem.entity.Vendedor;
-
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Scanner;
+
+import com.materialsystem.entity.Vendedor;
+import com.materialsystem.util.ConsoleInputUtils;
 
 public class VendedorView {
-    private Scanner scanner = new Scanner(System.in);
+    
 
     public Vendedor solicitarDadosNovoVendedor() {
         System.out.print("Nome: ");
-        String nome = scanner.nextLine();
+        String nome= ConsoleInputUtils.lerString();
 
         System.out.print("CPF: ");
-        String cpf = scanner.nextLine();
+        String cpf= ConsoleInputUtils.lerString();
 
         System.out.print("Contato: ");
-        String contato = scanner.nextLine();
+        String contato= ConsoleInputUtils.lerString();
 
-        System.out.print("Salário: ");
-        double salario = scanner.nextDouble();
+        
+        double salario = ConsoleInputUtils.lerDouble("Salário: ");
 
         System.out.print("Data de contratação (AAAA-MM-DD): ");
-        String dataStr = scanner.next();
-        LocalDate dataContratacao = LocalDate.parse(dataStr);
+        LocalDate dataContratacao = lerDataValida();
 
         System.out.print("ID do usuário (ou 0 se não houver): ");
-        int idUsuario = scanner.nextInt();
-        scanner.nextLine();
-
+        int idUsuario = ConsoleInputUtils.lerInt("Escolha: ");
+        
         Integer idUsuarioFinal = (idUsuario == 0) ? null : idUsuario;
 
         return new Vendedor(0, nome, cpf, contato, salario, dataContratacao, idUsuarioFinal);
+    }
+     // Método auxiliar para validar a data com tratamento de erro
+    private LocalDate lerDataValida() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        while (true) {
+            String dataStr = ConsoleInputUtils.lerString();
+            try {
+                return LocalDate.parse(dataStr, formatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Data inválida. Informe no formato AAAA-MM-DD.");
+            }
+        }
     }
 
     public void exibirListaVendedores(List<Vendedor> lista) {
