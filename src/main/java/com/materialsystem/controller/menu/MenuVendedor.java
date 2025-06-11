@@ -14,9 +14,9 @@ public class MenuVendedor implements Menu {
 
     public void executarOpcao(int opcao) {
         switch (opcao) {
-            case 1 -> new CompradorController().gerenciarCompradores();
-            case 2 -> new VendaController().gerenciarVendas();            
-            case 3 -> new UsuarioController().cadastrarUsuarioComoComprador();
+            case 1 -> new UsuarioController().cadastrarUsuarioComoComprador();
+            case 2 -> new CompradorController().gerenciarCompradores();
+            case 3 -> new VendaController().gerenciarVendas();            
             case 0 -> System.exit(0);
             default -> System.out.println("Opção inválida.");
         }

@@ -15,12 +15,12 @@ public class DatabaseInitializer {
 
             // Criação automática das tabelas caso não existam
             stmt.execute("""
-                CREATE TABLE Usuario (
+                CREATE TABLE IF NOT EXISTS Usuario (
                     id_usuario SERIAL PRIMARY KEY,
                     nome VARCHAR(100) NOT NULL,
                     username VARCHAR(50) UNIQUE NOT NULL,
                     senha VARCHAR(255) NOT NULL,
-                    papel VARCHAR(20) NOT NULL CHECK (papel IN ('gerente', 'vendedor', 'comprador')),
+                    papel VARCHAR(20) NOT NULL CHECK (papel IN ('Gerente', 'Vendedor', 'Comprador', 'gerente', 'vendedor', 'comprador'))
 
                 );
                 
@@ -47,7 +47,7 @@ public class DatabaseInitializer {
                     capacidade NUMERIC(10, 2)
                 );
 
-                CREATE TABLE ProdutoEstoque (
+                CREATE TABLE IF NOT EXISTS ProdutoEstoque (
                     id_produto INTEGER NOT NULL REFERENCES Produto(id_produto),
                     id_estoque INTEGER NOT NULL REFERENCES Estoque(id_estoque),
                     quantidade INTEGER NOT NULL CHECK (quantidade >= 0),
@@ -60,16 +60,16 @@ public class DatabaseInitializer {
                         ON DELETE CASCADE
                 );
 
-                CREATE TABLE Vendedor (
+                CREATE TABLE  IF NOT EXISTS Vendedor (
                     id_vendedor SERIAL PRIMARY KEY,
                     nome VARCHAR(100) NOT NULL,
                     cpf VARCHAR(14) UNIQUE NOT NULL,
                     contato VARCHAR(100),
                     salario NUMERIC(10, 2),
-                    data_contratacao DATE,
+                    data_contratacao DATE
                 );
 
-                CREATE TABLE Comprador (
+                CREATE TABLE IF NOT EXISTS Comprador (
                     id_comprador SERIAL PRIMARY KEY,
                     nome VARCHAR(100) NOT NULL,
                     cpf VARCHAR(14) UNIQUE NOT NULL,
