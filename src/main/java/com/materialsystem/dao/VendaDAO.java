@@ -1,37 +1,52 @@
 package com.materialsystem.dao;
 
+import com.materialsystem.entity.ItemVenda;
 import com.materialsystem.entity.Venda;
 import com.materialsystem.util.DatabaseConnection;
 
 import java.sql.*;
-// import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VendaDAO {
 
-    public void inserir(Venda venda) {
-        String sql = "INSERT INTO Venda (data_venda, id_vendedor, id_comprador, valor_total) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+    public boolean registrarVendaComItens(Venda venda, List<ItemVenda> itens) {
+        String sqlVenda = "INSERT INTO Venda (data_venda, id_vendedor, id_comprador, valor_total) VALUES (?, ?, ?, ?) RETURNING id_venda";
+        String sqlItem = "INSERT INTO ItemVenda (id_venda, id_produto, quantidade, preco_unitario_venda) VALUES (?, ?, ?, ?)";
 
-            stmt.setTimestamp(1, Timestamp.valueOf(venda.getDataVenda()));
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            conn.setAutoCommit(false);
 
-            if (venda.getIdVendedor() != null)
-                stmt.setInt(2, venda.getIdVendedor());
-            else
-                stmt.setNull(2, Types.INTEGER);
+            int idVenda;
+            try (PreparedStatement stmtVenda = conn.prepareStatement(sqlVenda)) {
+                stmtVenda.setTimestamp(1, Timestamp.valueOf(venda.getDataVenda()));
+                if (venda.getIdVendedor() != null) stmtVenda.setInt(2, venda.getIdVendedor());
+                else stmtVenda.setNull(2, Types.INTEGER);
+                if (venda.getIdComprador() != null) stmtVenda.setInt(3, venda.getIdComprador());
+                else stmtVenda.setNull(3, Types.INTEGER);
+                stmtVenda.setDouble(4, venda.getValorTotal());
 
-            if (venda.getIdComprador() != null)
-                stmt.setInt(3, venda.getIdComprador());
-            else
-                stmt.setNull(3, Types.INTEGER);
+                ResultSet rs = stmtVenda.executeQuery();
+                if (!rs.next()) { conn.rollback(); return false; }
+                idVenda = rs.getInt(1);
+            }
 
-            stmt.setDouble(4, venda.getValorTotal());
+            try (PreparedStatement stmtItem = conn.prepareStatement(sqlItem)) {
+                for (ItemVenda item : itens) {
+                    stmtItem.setInt(1, idVenda);
+                    stmtItem.setInt(2, item.getIdProduto());
+                    stmtItem.setInt(3, item.getQuantidade());
+                    stmtItem.setDouble(4, item.getPrecoUnitarioVenda());
+                    stmtItem.addBatch();
+                }
+                stmtItem.executeBatch();
+            }
 
-            stmt.executeUpdate();
+            conn.commit();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -57,28 +72,5 @@ public class VendaDAO {
             e.printStackTrace();
         }
         return vendas;
-    }
-
-    public Venda buscarPorId(int id) {
-        Venda venda = null;
-        String sql = "SELECT * FROM Venda WHERE id_venda = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                venda = new Venda();
-                venda.setIdVenda(rs.getInt("id_venda"));
-                venda.setDataVenda(rs.getTimestamp("data_venda").toLocalDateTime());
-                int idVendedor = rs.getInt("id_vendedor");
-                venda.setIdVendedor(rs.wasNull() ? null : idVendedor);
-                int idComprador = rs.getInt("id_comprador");
-                venda.setIdComprador(rs.wasNull() ? null : idComprador);
-                venda.setValorTotal(rs.getDouble("valor_total"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return venda;
     }
 }

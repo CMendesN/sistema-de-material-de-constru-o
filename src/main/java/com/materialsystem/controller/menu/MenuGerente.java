@@ -3,7 +3,6 @@ package com.materialsystem.controller.menu;
 import com.materialsystem.controller.CompradorController;
 import com.materialsystem.controller.EstoqueController;
 import com.materialsystem.controller.FabricanteController;
-import com.materialsystem.controller.ItemVendaController;
 import com.materialsystem.controller.ProdutoController;
 import com.materialsystem.controller.ProdutoEstoqueController;
 import com.materialsystem.controller.UsuarioController;
@@ -19,8 +18,7 @@ public class MenuGerente implements Menu {
         System.out.println("5 - Gerenciar Vendedores");
         System.out.println("6 - Gerenciar Compradores");
         System.out.println("7 - Gerenciar Vendas");
-        System.out.println("8 - Gerenciar Itens de Venda");
-        System.out.println("9 - Cadastrar Novo Usuário");
+        System.out.println("8 - Cadastrar Novo Usuário");
         System.out.println("0 - Sair");
     }
 
@@ -33,8 +31,7 @@ public class MenuGerente implements Menu {
             case 5 -> new VendedorController().gerenciarVendedores();
             case 6 -> new CompradorController().gerenciarCompradores();
             case 7 -> new VendaController().gerenciarVendas();
-            case 8 -> new ItemVendaController().gerenciarItensVenda();
-            case 9 -> new UsuarioController().cadastrarUsuario();
+            case 8 -> new UsuarioController().cadastrarUsuario();
             case 0 -> System.exit(0);
             default -> System.out.println("Opção inválida.");
         }
