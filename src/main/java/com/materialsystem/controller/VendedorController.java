@@ -26,7 +26,7 @@ public class VendedorController {
             System.out.println("0 - Voltar");
 
             int opcao = ConsoleInputUtils.lerInt("Escolha: ");
-            // Limpar buffer
+            
 
             switch (opcao) {
                 case 1:

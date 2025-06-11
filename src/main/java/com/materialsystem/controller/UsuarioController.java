@@ -34,4 +34,17 @@ public class UsuarioController {
         dao.inserir(usuario);
         view.exibirMensagem("Usuário administrador (Gerente) cadastrado com sucesso!");
     }
+    // Fluxo para vendedores: cria apenas usuários compradores
+    public void cadastrarUsuarioComoComprador() {
+        Usuario usuario = view.solicitarCadastroDeComprador();
+
+
+        if (dao.buscarPorUsername(usuario.getUsername()) != null) {
+            view.exibirMensagem("Erro: Username já existente. Cadastro cancelado.");
+            return;
+        }
+
+        dao.inserir(usuario);
+        view.exibirMensagem("Usuário comprador cadastrado com sucesso!");
+    }
 }

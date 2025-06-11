@@ -9,18 +9,17 @@ public class Vendedor {
     private String contato;
     private double salario;
     private LocalDate dataContratacao;
-    private Integer idUsuario; // Pode ser null
+    
 
     public Vendedor() {}
 
-    public Vendedor(int idVendedor, String nome, String cpf, String contato, double salario, LocalDate dataContratacao, Integer idUsuario) {
+    public Vendedor(int idVendedor, String nome, String cpf, String contato, double salario, LocalDate dataContratacao) {
         this.idVendedor = idVendedor;
         this.nome = nome;
         this.cpf = cpf;
         this.contato = contato;
         this.salario = salario;
         this.dataContratacao = dataContratacao;
-        this.idUsuario = idUsuario;
     }
 
     public int getIdVendedor() { return idVendedor; }
@@ -41,6 +40,5 @@ public class Vendedor {
     public LocalDate getDataContratacao() { return dataContratacao; }
     public void setDataContratacao(LocalDate dataContratacao) { this.dataContratacao = dataContratacao; }
 
-    public Integer getIdUsuario() { return idUsuario; }
-    public void setIdUsuario(Integer idUsuario) { this.idUsuario = idUsuario; }
+
 }

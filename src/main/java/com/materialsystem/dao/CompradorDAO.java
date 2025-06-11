@@ -10,7 +10,7 @@ import java.util.List;
 public class CompradorDAO {
 
     public void inserir(Comprador comprador) {
-        String sql = "INSERT INTO Comprador (nome, cpf, contato, endereco, id_usuario) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Comprador (nome, cpf, contato, endereco) VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -18,12 +18,7 @@ public class CompradorDAO {
             stmt.setString(2, comprador.getCpf());
             stmt.setString(3, comprador.getContato());
             stmt.setString(4, comprador.getEndereco());
-            
-            if (comprador.getIdUsuario() != null)
-                stmt.setInt(5, comprador.getIdUsuario());
-            else
-                stmt.setNull(5, Types.INTEGER);
-            
+                        
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -44,8 +39,6 @@ public class CompradorDAO {
                 c.setCpf(rs.getString("cpf"));
                 c.setContato(rs.getString("contato"));
                 c.setEndereco(rs.getString("endereco"));
-                int idUsuario = rs.getInt("id_usuario");
-                c.setIdUsuario(rs.wasNull() ? null : idUsuario);
                 compradores.add(c);
             }
         } catch (SQLException e) {
@@ -67,9 +60,7 @@ public class CompradorDAO {
                 comprador.setNome(rs.getString("nome"));
                 comprador.setCpf(rs.getString("cpf"));
                 comprador.setContato(rs.getString("contato"));
-                comprador.setEndereco(rs.getString("endereco"));
-                int idUsuario = rs.getInt("id_usuario");
-                comprador.setIdUsuario(rs.wasNull() ? null : idUsuario);
+                comprador.setEndereco(rs.getString("endereco"));                
             }
         } catch (SQLException e) {
             e.printStackTrace();

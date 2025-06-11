@@ -15,12 +15,13 @@ public class DatabaseInitializer {
 
             // Criação automática das tabelas caso não existam
             stmt.execute("""
-                CREATE TABLE IF NOT EXISTS Usuario (
+                CREATE TABLE Usuario (
                     id_usuario SERIAL PRIMARY KEY,
                     nome VARCHAR(100) NOT NULL,
                     username VARCHAR(50) UNIQUE NOT NULL,
                     senha VARCHAR(255) NOT NULL,
-                    papel VARCHAR(50) NOT NULL
+                    papel VARCHAR(20) NOT NULL CHECK (papel IN ('gerente', 'vendedor', 'comprador')),
+
                 );
                 
                 CREATE TABLE IF NOT EXISTS Fabricante (
@@ -46,30 +47,34 @@ public class DatabaseInitializer {
                     capacidade NUMERIC(10, 2)
                 );
 
-                CREATE TABLE IF NOT EXISTS ProdutoEstoque (
+                CREATE TABLE ProdutoEstoque (
                     id_produto INTEGER NOT NULL REFERENCES Produto(id_produto),
                     id_estoque INTEGER NOT NULL REFERENCES Estoque(id_estoque),
-                    quantidade INTEGER NOT NULL,
-                    PRIMARY KEY (id_produto, id_estoque)
+                    quantidade INTEGER NOT NULL CHECK (quantidade >= 0),
+                    PRIMARY KEY (id_produto, id_estoque),
+                    FOREIGN KEY (id_produto) REFERENCES Produto(id_produto)
+                        ON UPDATE CASCADE
+                        ON DELETE CASCADE,
+                    FOREIGN KEY (id_estoque) REFERENCES Estoque(id_estoque)
+                        ON UPDATE CASCADE
+                        ON DELETE CASCADE
                 );
 
-                CREATE TABLE IF NOT EXISTS Vendedor (
+                CREATE TABLE Vendedor (
                     id_vendedor SERIAL PRIMARY KEY,
                     nome VARCHAR(100) NOT NULL,
                     cpf VARCHAR(14) UNIQUE NOT NULL,
                     contato VARCHAR(100),
                     salario NUMERIC(10, 2),
                     data_contratacao DATE,
-                    id_usuario INTEGER REFERENCES Usuario(id_usuario)
                 );
 
-                CREATE TABLE IF NOT EXISTS Comprador (
+                CREATE TABLE Comprador (
                     id_comprador SERIAL PRIMARY KEY,
                     nome VARCHAR(100) NOT NULL,
                     cpf VARCHAR(14) UNIQUE NOT NULL,
                     contato VARCHAR(100),
-                    endereco VARCHAR(255),
-                    id_usuario INTEGER REFERENCES Usuario(id_usuario)
+                    endereco VARCHAR(255)
                 );
 
                 CREATE TABLE IF NOT EXISTS Venda (

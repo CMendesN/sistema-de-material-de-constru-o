@@ -6,17 +6,15 @@ public class Comprador {
     private String cpf;
     private String contato;
     private String endereco;
-    private Integer idUsuario;
 
     public Comprador() {}
 
-    public Comprador(int idComprador, String nome, String cpf, String contato, String endereco, Integer idUsuario) {
+    public Comprador(int idComprador, String nome, String cpf, String contato, String endereco) {
         this.idComprador = idComprador;
         this.nome = nome;
         this.cpf = cpf;
         this.contato = contato;
-        this.endereco = endereco;
-        this.idUsuario = idUsuario;
+        this.endereco = endereco;        
     }
 
     public int getIdComprador() { return idComprador; }
@@ -34,6 +32,4 @@ public class Comprador {
     public String getEndereco() { return endereco; }
     public void setEndereco(String endereco) { this.endereco = endereco; }
 
-    public Integer getIdUsuario() { return idUsuario; }
-    public void setIdUsuario(Integer idUsuario) { this.idUsuario = idUsuario; }
 }

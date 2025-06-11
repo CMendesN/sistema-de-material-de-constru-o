@@ -21,12 +21,7 @@ public class CompradorView {
         System.out.print("Endereço: ");
         String endereco= ConsoleInputUtils.lerString();
 
-        System.out.print("ID do usuário (ou 0 se não houver): ");
-        int idUsuario = ConsoleInputUtils.lerInt("Escolha: ");
-        
-        Integer idUsuarioFinal = (idUsuario == 0) ? null : idUsuario;
-
-        return new Comprador(0, nome, cpf, contato, endereco, idUsuarioFinal);
+        return new Comprador(0, nome, cpf, contato, endereco);
     }
 
     public void exibirListaCompradores(List<Comprador> lista) {

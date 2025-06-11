@@ -27,12 +27,8 @@ public class VendedorView {
         System.out.print("Data de contratação (AAAA-MM-DD): ");
         LocalDate dataContratacao = lerDataValida();
 
-        System.out.print("ID do usuário (ou 0 se não houver): ");
-        int idUsuario = ConsoleInputUtils.lerInt("Escolha: ");
-        
-        Integer idUsuarioFinal = (idUsuario == 0) ? null : idUsuario;
 
-        return new Vendedor(0, nome, cpf, contato, salario, dataContratacao, idUsuarioFinal);
+        return new Vendedor(0, nome, cpf, contato, salario, dataContratacao);
     }
      // Método auxiliar para validar a data com tratamento de erro
     private LocalDate lerDataValida() {

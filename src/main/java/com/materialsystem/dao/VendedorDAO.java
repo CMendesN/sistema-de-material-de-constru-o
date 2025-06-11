@@ -11,7 +11,7 @@ import java.util.List;
 public class VendedorDAO {
 
     public void inserir(Vendedor vendedor) {
-        String sql = "INSERT INTO Vendedor (nome, cpf, contato, salario, data_contratacao, id_usuario) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Vendedor (nome, cpf, contato, salario, data_contratacao) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -20,12 +20,7 @@ public class VendedorDAO {
             stmt.setString(3, vendedor.getContato());
             stmt.setDouble(4, vendedor.getSalario());
             stmt.setDate(5, Date.valueOf(vendedor.getDataContratacao()));
-            
-            if (vendedor.getIdUsuario() != null)
-                stmt.setInt(6, vendedor.getIdUsuario());
-            else
-                stmt.setNull(6, Types.INTEGER);
-            
+
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -47,8 +42,6 @@ public class VendedorDAO {
                 v.setContato(rs.getString("contato"));
                 v.setSalario(rs.getDouble("salario"));
                 v.setDataContratacao(rs.getDate("data_contratacao").toLocalDate());
-                int idUsuario = rs.getInt("id_usuario");
-                v.setIdUsuario(rs.wasNull() ? null : idUsuario);
                 vendedores.add(v);
             }
         } catch (SQLException e) {
@@ -72,8 +65,7 @@ public class VendedorDAO {
                 vendedor.setContato(rs.getString("contato"));
                 vendedor.setSalario(rs.getDouble("salario"));
                 vendedor.setDataContratacao(rs.getDate("data_contratacao").toLocalDate());
-                int idUsuario = rs.getInt("id_usuario");
-                vendedor.setIdUsuario(rs.wasNull() ? null : idUsuario);
+                
             }
         } catch (SQLException e) {
             e.printStackTrace();
