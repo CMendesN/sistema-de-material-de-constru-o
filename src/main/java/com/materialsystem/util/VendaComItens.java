@@ -1,4 +1,4 @@
-package com.materialsystem.view;
+package com.materialsystem.util;
 
 import com.materialsystem.entity.ItemVenda;
 import com.materialsystem.entity.Venda;

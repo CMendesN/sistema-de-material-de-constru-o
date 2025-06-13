@@ -19,6 +19,7 @@ public class MenuGerente implements Menu {
         System.out.println("6 - Gerenciar Compradores");
         System.out.println("7 - Gerenciar Vendas");
         System.out.println("8 - Cadastrar Novo Usuário");
+        System.out.println("99 - Trocar de usuário");     
         System.out.println("0 - Sair");
     }
 

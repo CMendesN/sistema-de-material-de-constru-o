@@ -23,7 +23,7 @@ public class UsuarioDAO {
                 usuario.setIdUsuario(rs.getInt("id_usuario"));
                 usuario.setNome(rs.getString("nome"));
                 usuario.setUsername(rs.getString("username"));
-                usuario.setSenha(rs.getString("senha"));  // continua armazenando o hash no atributo senha
+                usuario.setSenha(rs.getString("senha"));  
                 usuario.setPapel(rs.getString("papel"));
             }
         } catch (SQLException e) {

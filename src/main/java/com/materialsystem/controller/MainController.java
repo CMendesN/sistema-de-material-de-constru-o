@@ -10,15 +10,25 @@ import com.materialsystem.util.ConsoleInputUtils;
 public class MainController {
 
     public void iniciarAplicacao() {
-        Usuario usuario = new LoginController().autenticarUsuario();
-        Menu menu = criarMenuPorPapel(usuario.getPapel());
-
         while (true) {
-            System.out.println("\n=== Menu Principal ===");
-            System.out.println("Papel: " + usuario.getPapel());
-            menu.exibirMenu();
-            int opcao = ConsoleInputUtils.lerInt("Escolha: ");
-            menu.executarOpcao(opcao);
+            Usuario usuario = new LoginController().autenticarUsuario();
+            Menu menu = criarMenuPorPapel(usuario.getPapel());
+
+            boolean trocarUsuario = false;
+
+            while (!trocarUsuario) {
+                System.out.println("\n=== Menu Principal ===");
+                System.out.println("Usuário: " + usuario.getNome() + " | Papel: " + usuario.getPapel());
+                menu.exibirMenu();
+                int opcao = ConsoleInputUtils.lerInt("Escolha: ");
+
+                if (opcao == 99) {
+                    trocarUsuario = true;
+                    System.out.println("Saindo da sessão atual...\n");
+                } else {
+                    menu.executarOpcao(opcao);
+                }
+            }
         }
     }
 

@@ -27,4 +27,23 @@ public class EstoqueView {
     public void exibirMensagem(String mensagem) {
         System.out.println(mensagem);
     }
+    public Estoque solicitarDadosAtualizacao(Estoque estoqueAtual) {
+        System.out.println("Atualizando estoque ID: " + estoqueAtual.getIdEstoque());
+
+        System.out.print("Localização [" + estoqueAtual.getLocalizacao() + "]: ");
+        String localInput = ConsoleInputUtils.lerString();
+        String localizacao = localInput.isBlank() ? estoqueAtual.getLocalizacao() : localInput;
+
+        System.out.print("Capacidade [" + estoqueAtual.getCapacidade() + "]: ");
+        String capInput = ConsoleInputUtils.lerString();
+        double capacidade;
+        try {
+            capacidade = capInput.isBlank() ? estoqueAtual.getCapacidade() : Double.parseDouble(capInput);
+        } catch (NumberFormatException e) {
+            capacidade = estoqueAtual.getCapacidade();
+        }
+
+        return new Estoque(estoqueAtual.getIdEstoque(), localizacao, capacidade);
+    }
+
 }

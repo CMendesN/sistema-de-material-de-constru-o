@@ -3,6 +3,7 @@ package com.materialsystem.view;
 import com.materialsystem.entity.ItemVenda;
 import com.materialsystem.entity.Venda;
 import com.materialsystem.util.ConsoleInputUtils;
+import com.materialsystem.util.VendaComItens;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

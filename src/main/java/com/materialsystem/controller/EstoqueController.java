@@ -26,7 +26,6 @@ public class EstoqueController {
             System.out.println("0 - Voltar");
 
             int opcao = ConsoleInputUtils.lerInt("Escolha: ");
-            // Limpar buffer
 
             switch (opcao) {
                 case 1:

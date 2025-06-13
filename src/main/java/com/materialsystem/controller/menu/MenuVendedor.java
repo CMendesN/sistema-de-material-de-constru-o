@@ -8,7 +8,8 @@ public class MenuVendedor implements Menu {
     public void exibirMenu() {
         System.out.println("1 - Cadastrar Comprador");
         System.out.println("2 - Gerenciar Compradores");
-        System.out.println("3 - Gerenciar Vendas");        
+        System.out.println("3 - Gerenciar Vendas");   
+        System.out.println("99 - Trocar de usuário");     
         System.out.println("0 - Sair");
     }
 

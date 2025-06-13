@@ -33,4 +33,26 @@ public class CompradorView {
     public void exibirMensagem(String mensagem) {
         System.out.println(mensagem);
     }
+    public Comprador solicitarDadosAtualizacao(Comprador compradorExistente) {
+        System.out.println("Atualizando comprador ID: " + compradorExistente.getIdComprador());
+
+        System.out.print("Nome [" + compradorExistente.getNome() + "]: ");
+        String nomeInput = ConsoleInputUtils.lerString();
+        String nome = nomeInput.isBlank() ? compradorExistente.getNome() : nomeInput;
+
+        System.out.print("CPF [" + compradorExistente.getCpf() + "]: ");
+        String cpfInput = ConsoleInputUtils.lerString();
+        String cpf = cpfInput.isBlank() ? compradorExistente.getCpf() : cpfInput;
+
+        System.out.print("Contato [" + compradorExistente.getContato() + "]: ");
+        String contatoInput = ConsoleInputUtils.lerString();
+        String contato = contatoInput.isBlank() ? compradorExistente.getContato() : contatoInput;
+
+        System.out.print("Endereço [" + compradorExistente.getEndereco() + "]: ");
+        String enderecoInput = ConsoleInputUtils.lerString();
+        String endereco = enderecoInput.isBlank() ? compradorExistente.getEndereco() : enderecoInput;
+
+        return new Comprador(compradorExistente.getIdComprador(), nome, cpf, contato, endereco);
+    }
+
 }

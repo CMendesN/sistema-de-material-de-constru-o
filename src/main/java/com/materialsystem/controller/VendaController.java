@@ -2,7 +2,7 @@ package com.materialsystem.controller;
 
 import com.materialsystem.dao.VendaDAO;
 import com.materialsystem.entity.Venda;
-import com.materialsystem.view.VendaComItens;
+import com.materialsystem.util.VendaComItens;
 import com.materialsystem.view.VendaView;
 
 import java.util.List;

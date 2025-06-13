@@ -25,22 +25,10 @@ public class VendedorView {
         double salario = ConsoleInputUtils.lerDouble("Salário: ");
 
         System.out.print("Data de contratação (AAAA-MM-DD): ");
-        LocalDate dataContratacao = lerDataValida();
+        LocalDate dataContratacao = ConsoleInputUtils.lerDataValida();
 
 
         return new Vendedor(0, nome, cpf, contato, salario, dataContratacao);
-    }
-     // Método auxiliar para validar a data com tratamento de erro
-    private LocalDate lerDataValida() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        while (true) {
-            String dataStr = ConsoleInputUtils.lerString();
-            try {
-                return LocalDate.parse(dataStr, formatter);
-            } catch (DateTimeParseException e) {
-                System.out.println("Data inválida. Informe no formato AAAA-MM-DD.");
-            }
-        }
     }
 
     public void exibirListaVendedores(List<Vendedor> lista) {
@@ -48,6 +36,49 @@ public class VendedorView {
             System.out.println(v);
         }
     }
+    
+    public Vendedor solicitarDadosAtualizacao(Vendedor vendedorExistente) {
+        System.out.println("Atualizando vendedor ID: " + vendedorExistente.getIdVendedor());
+
+        System.out.print("Nome [" + vendedorExistente.getNome() + "]: ");
+        String nomeInput = ConsoleInputUtils.lerString();
+        String nome = nomeInput.isBlank() ? vendedorExistente.getNome() : nomeInput;
+
+        System.out.print("CPF [" + vendedorExistente.getCpf() + "]: ");
+        String cpfInput = ConsoleInputUtils.lerString();
+        String cpf = cpfInput.isBlank() ? vendedorExistente.getCpf() : cpfInput;
+
+        System.out.print("Contato [" + vendedorExistente.getContato() + "]: ");
+        String contatoInput = ConsoleInputUtils.lerString();
+        String contato = contatoInput.isBlank() ? vendedorExistente.getContato() : contatoInput;
+
+        System.out.print("Salário [" + vendedorExistente.getSalario() + "]: ");
+        String salarioInput = ConsoleInputUtils.lerString();
+        double salario;
+        try {
+            salario = salarioInput.isBlank() ? vendedorExistente.getSalario() : Double.parseDouble(salarioInput);
+        } catch (NumberFormatException e) {
+            System.out.println("Entrada inválida. Usando salário atual.");
+            salario = vendedorExistente.getSalario();
+        }
+
+        System.out.print("Data de contratação [" + vendedorExistente.getDataContratacao() + "] (AAAA-MM-DD): ");
+        String dataInput = ConsoleInputUtils.lerString();
+        LocalDate dataContratacao;
+        try {
+            dataContratacao = dataInput.isBlank() ?
+                    vendedorExistente.getDataContratacao() :
+                    LocalDate.parse(dataInput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        } catch (DateTimeParseException e) {
+            System.out.println("Data inválida. Usando data atual.");
+            dataContratacao = vendedorExistente.getDataContratacao();
+        }
+
+
+
+        return new Vendedor(vendedorExistente.getIdVendedor(), nome, cpf, contato, salario, dataContratacao);
+    }
+
 
     public void exibirMensagem(String mensagem) {
         System.out.println(mensagem);

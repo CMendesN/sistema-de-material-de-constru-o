@@ -67,4 +67,32 @@ public class CompradorDAO {
         }
         return comprador;
     }
+    public void atualizar(Comprador comprador) {
+        String sql = "UPDATE Comprador SET nome = ?, cpf = ?, contato = ?, endereco = ? WHERE id_comprador = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, comprador.getNome());
+            stmt.setString(2, comprador.getCpf());
+            stmt.setString(3, comprador.getContato());
+            stmt.setString(4, comprador.getEndereco());
+            stmt.setInt(5, comprador.getIdComprador());
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deletar(int id) {
+        String sql = "DELETE FROM Comprador WHERE id_comprador = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

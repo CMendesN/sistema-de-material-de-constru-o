@@ -30,4 +30,22 @@ public class FabricanteView {
     public void exibirMensagem(String mensagem) {
         System.out.println(mensagem);
     }
+    public Fabricante solicitarDadosAtualizacao(Fabricante fabricanteExistente) {
+        System.out.println("Atualizando fabricante ID: " + fabricanteExistente.getIdFabricante());
+
+        System.out.print("Nome [" + fabricanteExistente.getNomeFabricante() + "]: ");
+        String nomeInput = ConsoleInputUtils.lerString();
+        String nome = nomeInput.isBlank() ? fabricanteExistente.getNomeFabricante() : nomeInput;
+
+        System.out.print("Contato [" + fabricanteExistente.getContato() + "]: ");
+        String contatoInput = ConsoleInputUtils.lerString();
+        String contato = contatoInput.isBlank() ? fabricanteExistente.getContato() : contatoInput;
+
+        System.out.print("Endereço [" + fabricanteExistente.getEndereco() + "]: ");
+        String enderecoInput = ConsoleInputUtils.lerString();
+        String endereco = enderecoInput.isBlank() ? fabricanteExistente.getEndereco() : enderecoInput;
+
+        return new Fabricante(fabricanteExistente.getIdFabricante(), nome, contato, endereco);
+    }
+
 }

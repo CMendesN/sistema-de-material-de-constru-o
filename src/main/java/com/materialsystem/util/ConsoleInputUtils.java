@@ -1,5 +1,8 @@
 package com.materialsystem.util;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class ConsoleInputUtils {
@@ -46,4 +49,16 @@ public class ConsoleInputUtils {
             }
         }
     }
+    public static LocalDate lerDataValida() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        while (true) {
+            String dataStr = lerString();
+            try {
+                return LocalDate.parse(dataStr, formatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Data inválida. Informe no formato AAAA-MM-DD.");
+            }
+        }
+    }
+
 }
