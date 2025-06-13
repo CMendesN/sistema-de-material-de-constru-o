@@ -39,6 +39,9 @@ public class Vendedor {
 
     public LocalDate getDataContratacao() { return dataContratacao; }
     public void setDataContratacao(LocalDate dataContratacao) { this.dataContratacao = dataContratacao; }
-
+    @Override
+    public String toString(){
+        return "Vendedor {idVendedor="+ idVendedor +", nome="+ nome+ ", cpf="+ cpf + ", contato="+ contato +", salario="+salario+ ", dataContratacao="+ dataContratacao +"}";
+    }
 
 }

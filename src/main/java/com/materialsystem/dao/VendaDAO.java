@@ -73,4 +73,57 @@ public class VendaDAO {
         }
         return vendas;
     }
+    public List<ItemVenda> buscarItensPorVenda(int idVenda) {
+        List<ItemVenda> itens = new ArrayList<>();
+        String sql = "SELECT * FROM ItemVenda WHERE id_venda = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idVenda);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                ItemVenda item = new ItemVenda();
+                item.setIdItemVenda(rs.getInt("id_item_venda"));
+                item.setIdVenda(rs.getInt("id_venda"));
+                item.setIdProduto(rs.getInt("id_produto"));
+                item.setQuantidade(rs.getInt("quantidade"));
+                item.setPrecoUnitarioVenda(rs.getDouble("preco_unitario_venda"));
+                itens.add(item);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return itens;
+    }
+    public boolean deletarVenda(int idVenda) {
+        String deleteItens = "DELETE FROM ItemVenda WHERE id_venda = ?";
+        String deleteVenda = "DELETE FROM Venda WHERE id_venda = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmt1 = conn.prepareStatement(deleteItens);
+                PreparedStatement stmt2 = conn.prepareStatement(deleteVenda)) {
+
+                stmt1.setInt(1, idVenda);
+                stmt1.executeUpdate();
+
+                stmt2.setInt(1, idVenda);
+                stmt2.executeUpdate();
+
+                conn.commit();
+                return true;
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
 }

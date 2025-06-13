@@ -33,4 +33,11 @@ public class Venda {
 
     public double getValorTotal() { return valorTotal; }
     public void setValorTotal(double valorTotal) { this.valorTotal = valorTotal; }
+    @Override
+    public String toString() {
+        return "Venda [idVenda=" + idVenda + ", dataVenda=" + dataVenda + ", idVendedor=" + idVendedor
+                + ", idComprador=" + idComprador + ", valorTotal=" + valorTotal + "]";
+    }
+    
+    
 }

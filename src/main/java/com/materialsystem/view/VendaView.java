@@ -1,5 +1,6 @@
 package com.materialsystem.view;
 
+import com.materialsystem.dao.VendaDAO;
 import com.materialsystem.entity.ItemVenda;
 import com.materialsystem.entity.Venda;
 import com.materialsystem.util.ConsoleInputUtils;
@@ -44,4 +45,14 @@ public class VendaView {
     public void exibirMensagem(String mensagem) {
         System.out.println(mensagem);
     }
+    public void exibirListaVendasComItens(List<Venda> vendas, VendaDAO dao) {
+        for (Venda v : vendas) {
+            System.out.println(v);
+            List<ItemVenda> itens = dao.buscarItensPorVenda(v.getIdVenda());
+            for (ItemVenda item : itens) {
+                System.out.println("  ↳ " + item);
+            }
+        }
+    }
+
 }
