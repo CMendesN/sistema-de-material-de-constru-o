@@ -20,7 +20,7 @@ public class DatabaseInitializer {
                     nome VARCHAR(100) NOT NULL,
                     username VARCHAR(50) UNIQUE NOT NULL,
                     senha VARCHAR(255) NOT NULL,
-                    papel VARCHAR(20) NOT NULL CHECK (papel IN ('Gerente', 'Vendedor', 'Comprador', 'gerente', 'vendedor', 'comprador'))
+                    papel VARCHAR(20) NOT NULL CHECK (papel IN ('Gerente', 'Vendedor', 'Comprador', 'gerente', 'vendedor', 'comprador','Caixa', 'caixa'))
 
                 );
                 

@@ -1,6 +1,7 @@
 package com.materialsystem.controller;
 
 import com.materialsystem.controller.menu.Menu;
+import com.materialsystem.controller.menu.MenuCaixa;
 import com.materialsystem.controller.menu.MenuComprador;
 import com.materialsystem.controller.menu.MenuGerente;
 import com.materialsystem.controller.menu.MenuVendedor;
@@ -27,6 +28,7 @@ public class MainController {
             case "gerente" -> new MenuGerente();
             case "vendedor" -> new MenuVendedor();
             case "comprador" -> new MenuComprador();
+            case "caixa" -> new MenuCaixa();
             default -> throw new IllegalArgumentException("Papel inválido: " + papel);
         };
     }

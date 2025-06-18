@@ -29,7 +29,7 @@ public class UsuarioView {
 
         return new Usuario(0, nome, username, senha, "Gerente");
     }
-        public Usuario solicitarCadastroDeComprador() {       
+    public Usuario solicitarCadastroDeComprador() {       
         String nome = solicitarNome();
         String username = solicitarUsername();
         String senha = solicitarSenhaComValidacao();
@@ -49,11 +49,11 @@ public class UsuarioView {
 
     private String solicitarPapel() {
         while (true) {
-            System.out.print("Papel (Gerente, Vendedor, Comprador): ");
+            System.out.print("Papel (Gerente, Vendedor, Comprador, Caixa): ");
             String papel = ConsoleInputUtils.lerString().trim();
 
             if (papel.equalsIgnoreCase("Gerente") || papel.equalsIgnoreCase("Vendedor")
-                    || papel.equalsIgnoreCase("Comprador")) {
+                    || papel.equalsIgnoreCase("Comprador") || papel.equalsIgnoreCase("Caixa")) {
                 return papel;
             } else {
                 System.out.println("Papel inválido. Tente novamente.");
