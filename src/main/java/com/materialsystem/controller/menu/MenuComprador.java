@@ -7,6 +7,7 @@ public class MenuComprador implements Menu{
     public void exibirMenu() {
         System.out.println("1 - Consultar Produtos");
         System.out.println("2 - Consultar Vendas");
+        System.out.println("99 - Trocar de usuário");     
         System.out.println("0 - Sair");
     }
 

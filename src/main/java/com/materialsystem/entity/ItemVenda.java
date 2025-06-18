@@ -31,4 +31,11 @@ public class ItemVenda {
 
     public double getPrecoUnitarioVenda() { return precoUnitarioVenda; }
     public void setPrecoUnitarioVenda(double precoUnitarioVenda) { this.precoUnitarioVenda = precoUnitarioVenda; }
+
+    @Override
+    public String toString() {
+        return "ItemVenda {idItemVenda=" + idItemVenda + ", idVenda=" + idVenda + ", idProduto=" + idProduto
+                + ", quantidade=" + quantidade + ", precoUnitarioVenda=" + precoUnitarioVenda + "}";
+    }
+    
 }

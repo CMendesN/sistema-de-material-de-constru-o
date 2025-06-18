@@ -41,4 +41,49 @@ public class ProdutoView {
     public void exibirMensagem(String msg) {
         System.out.println(msg);
     }
+    public Produto solicitarDadosAtualizacao(Produto produtoAtual) {
+        System.out.println("Atualizando produto ID: " + produtoAtual.getIdProduto());
+
+        System.out.print("Nome [" + produtoAtual.getNome() + "]: ");
+        String nome = ConsoleInputUtils.lerString();
+        if (nome.isBlank()) nome = produtoAtual.getNome();
+
+        System.out.print("Descrição [" + produtoAtual.getDescricao() + "]: ");
+        String descricao = ConsoleInputUtils.lerString();
+        if (descricao.isBlank()) descricao = produtoAtual.getDescricao();
+
+        System.out.print("Preço Unitário [" + produtoAtual.getPrecoUnitario() + "]: ");
+        String precoStr = ConsoleInputUtils.lerString();
+        double preco;
+        try {
+            preco = precoStr.isBlank() ? produtoAtual.getPrecoUnitario() : Double.parseDouble(precoStr);
+        } catch (NumberFormatException e) {
+            preco = produtoAtual.getPrecoUnitario();
+        }
+
+        System.out.print("Quantidade em Estoque [" + produtoAtual.getQuantidadeEmEstoque() + "]: ");
+        String qtdStr = ConsoleInputUtils.lerString();
+        int quantidade;
+        try {
+            quantidade = qtdStr.isBlank() ? produtoAtual.getQuantidadeEmEstoque() : Integer.parseInt(qtdStr);
+        } catch (NumberFormatException e) {
+            quantidade = produtoAtual.getQuantidadeEmEstoque();
+        }
+
+        System.out.print("ID Fabricante [" + produtoAtual.getIdFabricante() + "]: ");
+        String idFabStr = ConsoleInputUtils.lerString();
+        int idFabricante;
+        try {
+            idFabricante = idFabStr.isBlank() ? produtoAtual.getIdFabricante() : Integer.parseInt(idFabStr);
+        } catch (NumberFormatException e) {
+            idFabricante = produtoAtual.getIdFabricante();
+        }
+
+        System.out.print("Categoria [" + produtoAtual.getCategoria() + "]: ");
+        String categoria = ConsoleInputUtils.lerString();
+        if (categoria.isBlank()) categoria = produtoAtual.getCategoria();
+
+        return new Produto(produtoAtual.getIdProduto(), nome, descricao, preco, quantidade, idFabricante, categoria);
+    }
+
 }

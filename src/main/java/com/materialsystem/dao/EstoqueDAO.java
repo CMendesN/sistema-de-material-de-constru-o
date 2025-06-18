@@ -59,4 +59,30 @@ public class EstoqueDAO {
         }
         return estoque;
     }
+    public void atualizar(Estoque estoque) {
+        String sql = "UPDATE Estoque SET localizacao = ?, capacidade = ? WHERE id_estoque = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, estoque.getLocalizacao());
+            stmt.setDouble(2, estoque.getCapacidade());
+            stmt.setInt(3, estoque.getIdEstoque());
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deletar(int id) {
+        String sql = "DELETE FROM Estoque WHERE id_estoque = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

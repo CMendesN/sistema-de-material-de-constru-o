@@ -23,10 +23,13 @@ public class EstoqueController {
             System.out.println("\n--- Menu Estoque ---");
             System.out.println("1 - Inserir Estoque");
             System.out.println("2 - Listar Estoques");
+            System.out.println("3 - Buscar Estoque por ID");
+            System.out.println("4 - Atualizar Estoque");
+            System.out.println("5 - Deletar Estoque");
+
             System.out.println("0 - Voltar");
 
             int opcao = ConsoleInputUtils.lerInt("Escolha: ");
-            // Limpar buffer
 
             switch (opcao) {
                 case 1:
@@ -38,6 +41,39 @@ public class EstoqueController {
                     List<Estoque> lista = dao.buscarTodos();
                     view.exibirListaEstoques(lista);
                     break;
+                case 3:
+                    int idBusca = ConsoleInputUtils.lerInt("ID do Estoque: ");
+                    Estoque encontrado = dao.buscarPorId(idBusca);
+                    if (encontrado != null) {
+                        view.exibirMensagem(encontrado.toString());
+                    } else {
+                        view.exibirMensagem("Estoque não encontrado.");
+                    }
+                    break;
+
+                case 4:
+                    int idAtualizar = ConsoleInputUtils.lerInt("ID do Estoque para atualizar: ");
+                    Estoque estoqueAtual = dao.buscarPorId(idAtualizar);
+                    if (estoqueAtual != null) {
+                        Estoque atualizado = view.solicitarDadosAtualizacao(estoqueAtual);
+                        dao.atualizar(atualizado);
+                        view.exibirMensagem("Estoque atualizado com sucesso.");
+                    } else {
+                        view.exibirMensagem("Estoque não encontrado.");
+                    }
+                    break;
+
+                case 5:
+                    int idDeletar = ConsoleInputUtils.lerInt("ID do Estoque para deletar: ");
+                    Estoque existe = dao.buscarPorId(idDeletar);
+                    if (existe != null) {
+                        dao.deletar(idDeletar);
+                        view.exibirMensagem("Estoque deletado com sucesso.");
+                    } else {
+                        view.exibirMensagem("Estoque não encontrado.");
+                    }
+                    break;
+
                 case 0:
                     return;
                 default:

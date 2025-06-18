@@ -31,5 +31,9 @@ public class Comprador {
 
     public String getEndereco() { return endereco; }
     public void setEndereco(String endereco) { this.endereco = endereco; }
-
+    @Override
+    public String toString() {
+        return "Comprador {idComprador=" + idComprador + ", nome=" + nome + ", cpf=" + cpf + ", contato=" + contato
+                + ", endereco=" + endereco + "}";
+    }
 }

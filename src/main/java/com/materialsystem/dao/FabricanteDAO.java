@@ -62,4 +62,31 @@ public class FabricanteDAO {
         }
         return fabricante;
     }
+    public void atualizar(Fabricante fabricante) {
+        String sql = "UPDATE Fabricante SET nome_fabricante = ?, contato = ?, endereco = ? WHERE id_fabricante = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, fabricante.getNomeFabricante());
+            stmt.setString(2, fabricante.getContato());
+            stmt.setString(3, fabricante.getEndereco());
+            stmt.setInt(4, fabricante.getIdFabricante());
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deletar(int id) {
+        String sql = "DELETE FROM Fabricante WHERE id_fabricante = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

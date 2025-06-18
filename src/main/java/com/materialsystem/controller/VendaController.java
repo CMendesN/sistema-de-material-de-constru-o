@@ -2,7 +2,7 @@ package com.materialsystem.controller;
 
 import com.materialsystem.dao.VendaDAO;
 import com.materialsystem.entity.Venda;
-import com.materialsystem.view.VendaComItens;
+import com.materialsystem.util.VendaComItens;
 import com.materialsystem.view.VendaView;
 
 import java.util.List;
@@ -16,12 +16,14 @@ public class VendaController {
             System.out.println("\n--- Menu Venda ---");
             System.out.println("1 - Registrar Venda Completa");
             System.out.println("2 - Listar Vendas");
+            System.out.println("3 - Cancelar Venda (Excluir)");
             System.out.println("0 - Voltar");
 
             int opcao = com.materialsystem.util.ConsoleInputUtils.lerInt("Escolha: ");
             switch (opcao) {
                 case 1 -> realizarVendaCompleta();
                 case 2 -> listarVendas();
+                case 3 -> cancelarVenda();
                 case 0 -> { return; }
                 default -> view.exibirMensagem("Opção inválida.");
             }
@@ -40,8 +42,19 @@ public class VendaController {
         view.exibirMensagem(sucesso ? "Venda registrada com sucesso!" : "Erro ao registrar a venda.");
     }
 
+    // public void listarVendas() {
+    //     List<Venda> lista = dao.buscarTodas();
+    //     view.exibirListaVendas(lista);
+    // }
     public void listarVendas() {
         List<Venda> lista = dao.buscarTodas();
-        view.exibirListaVendas(lista);
+        view.exibirListaVendasComItens(lista, dao);
     }
+    public void cancelarVenda() {
+        int idVenda = com.materialsystem.util.ConsoleInputUtils.lerInt("ID da venda para cancelar: ");
+        boolean sucesso = dao.deletarVenda(idVenda);
+        view.exibirMensagem(sucesso ? "Venda cancelada com sucesso!" : "Erro ao cancelar a venda.");
+    }
+
+
 }
