@@ -1,7 +1,7 @@
 package com.materialsystem.controller;
 
 import com.materialsystem.dao.VendaDAO;
-import com.materialsystem.view.VendaComItens;
+import com.materialsystem.util.VendaComItens;
 import com.materialsystem.view.VendaView;
 
 public class CaixaController {
