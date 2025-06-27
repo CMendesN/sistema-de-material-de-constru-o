@@ -9,6 +9,7 @@ Este repositório contém o código‑fonte e os artefatos de projeto de um **si
 1. [Requisitos Funcionais](#requisitos-funcionais)
 2. [Entidades e Atributos](#entidades-e-atributos)
 3. [Modelo Entidade‑Relacionamento (MER)](#modelo-entidade-relacionamento-mer)
+3. [Modelo Entidade‑Relacionamento (MR)](#modelo-relacional)
 4. [Esquema Relacional (PostgreSQL)](#esquema-relacional-postgresql)
 5. [Aplicação Java (CLI)](#aplicação-java-cli)
 6. [Como Executar](#como-executar)
@@ -147,6 +148,30 @@ CREATE TABLE IF NOT EXISTS ItemVenda (
     preco_unitario_venda NUMERIC(10, 2) NOT NULL
 );
 ```
+## Operações SQL CRUD
+
+Os exemplos abaixo ilustram comandos aplicados à entidade `Fabricante`.
+
+```sql
+-- CREATE
+INSERT INTO Fabricante (nome_fabricante, contato, endereco)
+VALUES (?, ?, ?);
+
+-- READ
+SELECT * FROM Fabricante WHERE id_fabricante = ?;
+
+-- UPDATE
+UPDATE Fabricante
+SET nome_fabricante = ?, contato = ?, endereco = ?
+WHERE id_fabricante = ?;
+
+-- DELETE
+DELETE FROM Fabricante WHERE id_fabricante = ?;
+```
+
+Esses comandos são utilizados dentro dos métodos Java do pacote `dao/`, garantindo a separação da lógica de negócios e persistência.
+
+> 📂 Para consultar os arquivos completos, acesse a pasta [`dao/`](dao/):
 
 
 ## Aplicação Java CLI
@@ -161,8 +186,30 @@ CREATE TABLE IF NOT EXISTS ItemVenda (
 ### Fluxo de Uso
 
 1. **Tela de Apresentação** – banner ASCII com nome e versão do sistema.
-2. **Tela de Login** – autenticação de usuário (`username`/`senha`).
+![Tela inicial do Sistema](image/menu.png)
+2. **Tela de Login** – autenticação de usuário (`usuario`/`senha`).
+![Tela de login do Sistema](image/login.png)
 3. **Menu Principal** – opções para Gerente, Vendedor, Comprador ou Caixa.
+
+| Papel | Funcionalidades Principais                            |
+| ---------- | ------------------------------------------- |
+| `Caixa`   | Gerenciar vendas              |
+| `Gerente`      | Gerenciar todos os módulos e usuários                   |
+| `Comprador`     | Consultar produtos e vendas              |
+| `Vendedor`     |Cadastrar e gerenciar compradores e vendas|
+
+<h3 align="center">Menus por Papel</h3>
+
+<table align="center">
+  <tr>
+    <td align="center"><img src="image/principal_caixa.png" width="256px"/><br/>Caixa</td>
+    <td align="center"><img src="image/principal_comprador.png" width="256px"/><br/>Comprador</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="image/principal_vendedor.png" width="256px"/><br/>Vendedor</td>
+    <td align="center"><img src="image/principal_gerente.png" width="256px"/><br/>Gerente</td>
+  </tr>
+</table>    
 
 ---
 
