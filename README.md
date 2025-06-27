@@ -188,7 +188,19 @@ Esses comandos são utilizados dentro dos métodos Java do pacote `dao/`, garant
 1. **Tela de Apresentação** – banner ASCII com nome e versão do sistema.
 ![Tela inicial do Sistema](image/menu.png)
 2. **Tela de Login** – autenticação de usuário (`usuario`/`senha`).
+
 ![Tela de login do Sistema](image/login.png)
+
+Exceção da primeira execução que transfere para criação de usuario para criação de um papel de gerente:
+![Tela cadastro gerente do Sistema](image/primeira_inicializacao.png)
+
+A criação de Usuario possui restrições para criação da senha:
+
+![Restricao senha](image/Requisitosenhas.png)
+
+Tela de criação de usuario
+![criacao](image/CriacaoUsuario.png)
+
 3. **Menu Principal** – opções para Gerente, Vendedor, Comprador ou Caixa.
 
 | Papel | Funcionalidades Principais                            |
