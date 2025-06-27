@@ -186,7 +186,9 @@ Esses comandos são utilizados dentro dos métodos Java do pacote `dao/`, garant
 ### Fluxo de Uso
 
 1. **Tela de Apresentação** – banner ASCII com nome e versão do sistema.
+
 ![Tela inicial do Sistema](image/menu.png)
+
 2. **Tela de Login** – autenticação de usuário (`usuario`/`senha`).
 
 ![Tela de login do Sistema](image/login.png)
