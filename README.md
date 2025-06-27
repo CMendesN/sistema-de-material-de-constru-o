@@ -201,6 +201,7 @@ A criação de Usuario possui restrições para criação da senha:
 ![Restricao senha](image/Requisitosenhas.png)
 
 Tela de criação de usuario
+
 ![criacao](image/CriacaoUsuario.png)
 
 3. **Menu Principal** – opções para Gerente, Vendedor, Comprador ou Caixa.
