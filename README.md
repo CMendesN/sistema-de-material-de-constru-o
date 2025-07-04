@@ -227,6 +227,12 @@ Tela de criação de usuario
 </table>    
 
 ---
+## Fluxo do Menu de Produto
+<div align="center"> <table> <tr> <td align="center"><img src="image/PRODUTO/principal.png" width="340px"/><br/>Menu Produto</td> <td align="center"><img src="image/PRODUTO/inserir.png" width="340px"/><br/>Inserir Produto</td> <td align="center"><img src="image/PRODUTO/listar.png" width="340px"/><br/>Listar Produtos</td> </tr> <tr> <td align="center"><img src="image/PRODUTO/buscarID.png" width="340px"/><br/>Buscar Produto por ID</td> <td align="center"><img src="image/PRODUTO/atualizar.png" width="340px"/><br/>Atualizar Produto</td> <td align="center"><img src="image/PRODUTO/buscardelete.png" width="340px"/><br/>Produto não encontrado</td> </tr> <tr> <td colspan="3" align="center"><img src="image/PRODUTO/deletar.png" width="340px"/><br/>Deletar Produto</td> </tr> </table> </div>
+Essas são as funcionalidades do CRUD no módulo de Produto, incluindo mensagens informativas ao usuário.
+
+Para os outros menu as funcionalidade são similares e como podemos ve nos seguintes menus
+<div align="center"> <table> <tr> <td align="center"><img src="image/Fabricante.png" width="340px"/><br/>Menu Fabricante</td> <td align="center"><img src="image/Estoque.png" width="340px"/><br/>Menu Estoque</td>  </tr> </table> </div>
 
 ## Como Executar
 
