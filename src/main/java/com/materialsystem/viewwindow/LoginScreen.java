@@ -1,5 +1,9 @@
 package com.materialsystem.viewwindow;
 import javax.swing.*;
+
+import com.materialsystem.controller.LoginController;
+import com.materialsystem.entity.Usuario;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -41,13 +45,14 @@ public class LoginScreen extends JFrame {
     }
 
     private void autenticar() {
-        String usuario = txtUsuario.getText();
-        String senha = new String(txtSenha.getPassword());
+    	String usuarioInput = txtUsuario.getText();
+        String senhaInput = new String(txtSenha.getPassword());
 
-        // Exemplo fixo. Substitua por verificação no banco via DAO futuramente.
-        if (usuario.equals("admin") && senha.equals("123")) {
-            JOptionPane.showMessageDialog(this, "Login bem-sucedido!");
-            // Aqui você pode abrir o menu principal
+        LoginController controller = new LoginController();
+        Usuario usuario = controller.autenticarUsuario(usuarioInput, senhaInput);
+
+        if (usuario != null) {
+            JOptionPane.showMessageDialog(this, "Login bem-sucedido! Bem-vindo, " + usuario.getNome());
             dispose();
             new MenuPrincipal(usuario).setVisible(true);
         } else {

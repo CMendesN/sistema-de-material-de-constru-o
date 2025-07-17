@@ -105,7 +105,7 @@ public class DatabaseInitializer {
                 System.out.println("\nNenhum usuário cadastrado ainda.");
                 System.out.println("Iniciando fluxo de criação do primeiro usuário administrador (Gerente fixo)...");
                 UsuarioController uc = new UsuarioController();
-                uc.cadastrarUsuarioInicial();
+//                uc.cadastrarUsuarioInicial();
             }
 
 

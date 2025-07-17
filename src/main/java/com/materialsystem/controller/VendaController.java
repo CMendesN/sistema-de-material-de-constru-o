@@ -1,60 +1,33 @@
 package com.materialsystem.controller;
 
 import com.materialsystem.dao.VendaDAO;
+import com.materialsystem.entity.ItemVenda;
 import com.materialsystem.entity.Venda;
 import com.materialsystem.util.VendaComItens;
-import com.materialsystem.view.VendaView;
 
 import java.util.List;
 
 public class VendaController {
-    private final VendaView view = new VendaView();
+
     private final VendaDAO dao = new VendaDAO();
 
-    public void gerenciarVendas() {
-        while (true) {
-            System.out.println("\n--- Menu Venda ---");
-            System.out.println("1 - Registrar Venda Completa");
-            System.out.println("2 - Listar Vendas");
-            System.out.println("3 - Cancelar Venda (Excluir)");
-            System.out.println("0 - Voltar");
-
-            int opcao = com.materialsystem.util.ConsoleInputUtils.lerInt("Escolha: ");
-            switch (opcao) {
-                case 1 -> realizarVendaCompleta();
-                case 2 -> listarVendas();
-                case 3 -> cancelarVenda();
-                case 0 -> { return; }
-                default -> view.exibirMensagem("Opção inválida.");
-            }
-        }
+    public boolean registrarVenda(VendaComItens vendaComItens) {
+        return dao.registrarVendaComItens(vendaComItens.venda(), vendaComItens.itens());
     }
 
-    public void realizarVendaCompleta() {
-        VendaComItens entrada = view.solicitarVendaComItens();
-
-        if (entrada == null || entrada.venda() == null || entrada.itens().isEmpty()) {
-            view.exibirMensagem("Venda cancelada. Nenhum item informado.");
-            return;
-        }
-
-        boolean sucesso = dao.registrarVendaComItens(entrada.venda(), entrada.itens());
-        view.exibirMensagem(sucesso ? "Venda registrada com sucesso!" : "Erro ao registrar a venda.");
+    public List<Venda> listarTodas() {
+        return dao.buscarTodas();
     }
 
-    // public void listarVendas() {
-    //     List<Venda> lista = dao.buscarTodas();
-    //     view.exibirListaVendas(lista);
-    // }
-    public void listarVendas() {
-        List<Venda> lista = dao.buscarTodas();
-        view.exibirListaVendasComItens(lista, dao);
-    }
-    public void cancelarVenda() {
-        int idVenda = com.materialsystem.util.ConsoleInputUtils.lerInt("ID da venda para cancelar: ");
-        boolean sucesso = dao.deletarVenda(idVenda);
-        view.exibirMensagem(sucesso ? "Venda cancelada com sucesso!" : "Erro ao cancelar a venda.");
+    public List<ItemVenda> buscarItensPorVenda(int idVenda) {
+        return dao.buscarItensPorVenda(idVenda);
     }
 
+    public boolean cancelarVenda(int idVenda) {
+        return dao.deletarVenda(idVenda);
+    }
+    public List<Venda> listarPorComprador(int idComprador) {
+        return dao.buscarPorComprador(idComprador);
+    }
 
 }

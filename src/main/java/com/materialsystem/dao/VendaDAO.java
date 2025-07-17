@@ -124,6 +124,35 @@ public class VendaDAO {
         }
         return false;
     }
+    public List<Venda> buscarPorComprador(int idComprador) {
+        List<Venda> vendas = new ArrayList<>();
+        String sql = "SELECT * FROM Venda WHERE id_comprador = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idComprador);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Venda v = new Venda();
+                v.setIdVenda(rs.getInt("id_venda"));
+                v.setDataVenda(rs.getTimestamp("data_venda").toLocalDateTime());
+                int idVendedor = rs.getInt("id_vendedor");
+                v.setIdVendedor(rs.wasNull() ? null : idVendedor);
+                int idCompradorDb = rs.getInt("id_comprador");
+                v.setIdComprador(rs.wasNull() ? null : idCompradorDb);
+                v.setValorTotal(rs.getDouble("valor_total"));
+                vendas.add(v);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return vendas;
+    }
+
 
 
 }

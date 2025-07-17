@@ -2,49 +2,27 @@ package com.materialsystem.controller;
 
 import com.materialsystem.dao.UsuarioDAO;
 import com.materialsystem.entity.Usuario;
-import com.materialsystem.view.UsuarioView;
+import com.materialsystem.util.PasswordUtils;
+
+import java.util.List;
 
 public class UsuarioController {
 
-    private final UsuarioView view = new UsuarioView();
     private final UsuarioDAO dao = new UsuarioDAO();
 
-    // Fluxo normal para o menu
-    public void cadastrarUsuario() {
-        Usuario usuario = view.solicitarCadastroUsuario();
-
-        if (dao.buscarPorUsername(usuario.getUsername()) != null) {
-            view.exibirMensagem("Erro: Username já existente. Cadastro cancelado.");
-            return;
-        }
-
-        dao.inserir(usuario);
-        view.exibirMensagem("Usuário cadastrado com sucesso!");
+    public boolean usernameDisponivel(String username) {
+        return dao.buscarPorUsername(username) == null;
     }
 
-    // Fluxo especial da primeira execução
-    public void cadastrarUsuarioInicial() {
-        Usuario usuario = view.solicitarCadastroInicial();
-
-        if (dao.buscarPorUsername(usuario.getUsername()) != null) {
-            view.exibirMensagem("Erro: Username já existente. Cadastro cancelado.");
-            return;
-        }
-
-        dao.inserir(usuario);
-        view.exibirMensagem("Usuário administrador (Gerente) cadastrado com sucesso!");
+    public List<String> validarSenha(String senha) {
+        return PasswordUtils.validarForcaSenha(senha);
     }
-    // Fluxo para vendedores: cria apenas usuários compradores
-    public void cadastrarUsuarioComoComprador() {
-        Usuario usuario = view.solicitarCadastroDeComprador();
 
-
-        if (dao.buscarPorUsername(usuario.getUsername()) != null) {
-            view.exibirMensagem("Erro: Username já existente. Cadastro cancelado.");
-            return;
+    public boolean cadastrarUsuario(Usuario usuario) {
+        if (!usernameDisponivel(usuario.getUsername())) {
+            return false;
         }
-
         dao.inserir(usuario);
-        view.exibirMensagem("Usuário comprador cadastrado com sucesso!");
+        return true;
     }
 }
