@@ -28,7 +28,7 @@ public class MenuGerenteSwing implements MenuSwing {
     public JPanel construirPainel() {
         JPanel painel = new JPanel(new GridLayout(0, 1, 10, 10));
 
-        painel.add(criarBotao("Gerenciar Produtos", e -> new ProdutoViewSwing().setVisible(true)));
+        painel.add(criarBotao("Gerenciar Produtos", e -> new ProdutoViewSwing("Gerente").setVisible(true)));
 
         painel.add(criarBotao("Gerenciar Fabricantes", e -> new FabricanteViewSwing().setVisible(true)));
 

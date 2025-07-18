@@ -28,7 +28,7 @@ public class VendaViewSwing extends JFrame {
     private JTable tabelaItens;
     private List<ItemVenda> itensVenda = new ArrayList<>();
 
-    private Usuario usuarioLogado; // Pode ser null (sem filtro)
+    private Usuario usuarioLogado; 
 
     // Construtor padrão: usado por Gerente ou Vendedor
     public VendaViewSwing() {
@@ -61,8 +61,21 @@ public class VendaViewSwing extends JFrame {
         cbProduto = new JComboBox<>(new Vector<>(new ProdutoDAO().buscarTodos()));
 
         txtQuantidade = new JTextField();
+        
         txtPrecoUnitario = new JTextField();
+        if (usuarioLogado != null && "Comprador".equalsIgnoreCase(usuarioLogado.getPapel())) {
+            txtPrecoUnitario.setEditable(false);
+        } else {
+            txtPrecoUnitario.setEditable(true); 
+        }
 
+
+        cbProduto.addActionListener(e -> {
+            Produto produtoSelecionado = (Produto) cbProduto.getSelectedItem();
+            if (produtoSelecionado != null) {
+                txtPrecoUnitario.setText(String.valueOf(produtoSelecionado.getPrecoUnitario()));
+            }
+        });
         cabecalho.add(new JLabel("Vendedor:")); cabecalho.add(cbVendedor);
         cabecalho.add(new JLabel("Comprador:")); cabecalho.add(cbComprador);
         cabecalho.add(new JLabel("Produto:")); cabecalho.add(cbProduto);

@@ -57,35 +57,57 @@ public class ProdutoEstoqueDAO {
         }
     }
 
-    public void remover(int idProduto, int idEstoque) {
-        String sql = "DELETE FROM ProdutoEstoque WHERE id_produto = ? AND id_estoque = ?";
+	    public void remover(int idProduto, int idEstoque) {
+	        String sql = "DELETE FROM ProdutoEstoque WHERE id_produto = ? AND id_estoque = ?";
+	        try (Connection conn = DatabaseConnection.getConnection();
+	             PreparedStatement stmt = conn.prepareStatement(sql)) {
+	            stmt.setInt(1, idProduto);
+	            stmt.setInt(2, idEstoque);
+	            stmt.executeUpdate();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+    }
+    public boolean existeAssociacao(int idProduto, int idEstoque) {
+	    String sql = "SELECT COUNT(*) FROM ProdutoEstoque WHERE id_produto = ? AND id_estoque = ?";
+	
+	    try (Connection conn = DatabaseConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+	
+	        stmt.setInt(1, idProduto);
+	        stmt.setInt(2, idEstoque);
+	        ResultSet rs = stmt.executeQuery();
+	
+	        if (rs.next()) {
+	            return rs.getInt(1) > 0;
+	        }
+	
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return false;
+    }
+    public List<ProdutoEstoque> buscarTodos() {
+        List<ProdutoEstoque> lista = new ArrayList<>();
+        String sql = "SELECT id_produto, id_estoque, quantidade FROM ProdutoEstoque";
+
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, idProduto);
-            stmt.setInt(2, idEstoque);
-            stmt.executeUpdate();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                ProdutoEstoque pe = new ProdutoEstoque();
+                pe.setIdProduto(rs.getInt("id_produto"));
+                pe.setIdEstoque(rs.getInt("id_estoque"));
+                pe.setQuantidade(rs.getInt("quantidade"));
+                lista.add(pe);
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return lista;
     }
-    public boolean existeAssociacao(int idProduto, int idEstoque) {
-    String sql = "SELECT COUNT(*) FROM ProdutoEstoque WHERE id_produto = ? AND id_estoque = ?";
-
-    try (Connection conn = DatabaseConnection.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-        stmt.setInt(1, idProduto);
-        stmt.setInt(2, idEstoque);
-        ResultSet rs = stmt.executeQuery();
-
-        if (rs.next()) {
-            return rs.getInt(1) > 0;
-        }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return false;
-}
 
 }

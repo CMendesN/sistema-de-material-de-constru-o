@@ -1,6 +1,9 @@
 package com.materialsystem.viewwindow;
 
 import com.materialsystem.controller.ProdutoController;
+import com.materialsystem.dao.EstoqueDAO;
+import com.materialsystem.dao.ProdutoEstoqueDAO;
+import com.materialsystem.entity.Estoque;
 import com.materialsystem.entity.Produto;
 
 import javax.swing.*;
@@ -10,43 +13,56 @@ import java.util.List;
 
 public class ProdutoViewSwing extends JFrame {
 
-    private ProdutoController controller = new ProdutoController();
-    private JTable tabela;
-    private DefaultTableModel modelo;
+    private final ProdutoController controller = new ProdutoController();
+    private final JTable tabela;
+    private final DefaultTableModel modelo;
+    private final String papel;
 
-    public ProdutoViewSwing() {
+    private final JButton btnInserir = new JButton("Inserir");
+    private final JButton btnAtualizar = new JButton("Atualizar");
+    private final JButton btnDeletar = new JButton("Deletar");
+    private final JButton btnRecarregar = new JButton("Recarregar");
+    private final JButton btnRemoverAssociacao = new JButton("Remover Associação Estoque");
+
+    public ProdutoViewSwing(String papel) {
+        this.papel = papel;
+
         setTitle("Gerenciamento de Produtos");
         setSize(800, 400);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Modelo da tabela
         modelo = new DefaultTableModel(new Object[]{"ID", "Nome", "Descrição", "Preço", "Qtd", "Fabricante", "Categoria"}, 0);
         tabela = new JTable(modelo);
         JScrollPane scrollPane = new JScrollPane(tabela);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Painel de botões
         JPanel painelBotoes = new JPanel();
-        JButton btnInserir = new JButton("Inserir");
-        JButton btnAtualizar = new JButton("Atualizar");
-        JButton btnDeletar = new JButton("Deletar");
-        JButton btnRecarregar = new JButton("Recarregar");
-
         painelBotoes.add(btnInserir);
         painelBotoes.add(btnAtualizar);
         painelBotoes.add(btnDeletar);
+        painelBotoes.add(btnRemoverAssociacao);
         painelBotoes.add(btnRecarregar);
         add(painelBotoes, BorderLayout.SOUTH);
 
-        // Ações dos botões
         btnInserir.addActionListener(e -> inserirProduto());
         btnAtualizar.addActionListener(e -> atualizarProduto());
         btnDeletar.addActionListener(e -> deletarProduto());
         btnRecarregar.addActionListener(e -> carregarProdutos());
+        btnRemoverAssociacao.addActionListener(e -> removerAssociacaoProdutoEstoque());
 
         carregarProdutos();
+        aplicarPermissoes();
+    }
+
+    private void aplicarPermissoes() {
+        if ("Comprador".equalsIgnoreCase(papel)) {
+            btnInserir.setEnabled(false);
+            btnAtualizar.setEnabled(false);
+            btnDeletar.setEnabled(false);
+            btnRemoverAssociacao.setEnabled(false);
+        }
     }
 
     private void carregarProdutos() {
@@ -141,5 +157,30 @@ public class ProdutoViewSwing extends JFrame {
         }
         return null;
     }
-}
 
+    private void removerAssociacaoProdutoEstoque() {
+        int linhaSelecionada = tabela.getSelectedRow();
+        if (linhaSelecionada >= 0) {
+            int idProduto = (int) modelo.getValueAt(linhaSelecionada, 0);
+
+            List<Estoque> estoques = new EstoqueDAO().buscarTodos();
+            Estoque estoqueSelecionado = (Estoque) JOptionPane.showInputDialog(
+                this,
+                "Selecione o estoque:",
+                "Remover Associação",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                estoques.toArray(),
+                estoques.get(0)
+            );
+
+            if (estoqueSelecionado != null) {
+                int idEstoque = estoqueSelecionado.getIdEstoque();
+                new ProdutoEstoqueDAO().remover(idProduto, idEstoque);
+                JOptionPane.showMessageDialog(this, "Associação removida com sucesso.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um produto na tabela.");
+        }
+    }
+}

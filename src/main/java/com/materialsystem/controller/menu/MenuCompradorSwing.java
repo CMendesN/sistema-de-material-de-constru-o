@@ -17,7 +17,7 @@ public class MenuCompradorSwing implements MenuSwing {
     public JPanel construirPainel() {
         JPanel painel = new JPanel(new GridLayout(0, 1, 10, 10));
 
-        painel.add(criarBotao("Consultar Produtos", e -> new ProdutoViewSwing().setVisible(true)));
+        painel.add(criarBotao("Consultar Produtos", e -> new ProdutoViewSwing("Comprador").setVisible(true)));
         painel.add(criarBotao("Consultar Minhas Compras", e -> new VendaViewSwing(usuario).setVisible(true)));
 
         return painel;
