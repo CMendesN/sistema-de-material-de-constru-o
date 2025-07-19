@@ -18,8 +18,8 @@ public class WelcomeScreen extends JFrame {
         centerPanel.setBackground(Color.WHITE);
 
         // Adiciona a imagem (ajuste o caminho se necessário)
-        ImageIcon logo = new ImageIcon("/sistema-de-material-de-constru-o/image/logo159.png"); // substitua pelo caminho correto
-        JLabel logoLabel = new JLabel(new ImageIcon("/home/carlos/eclipse-workspace/sistema-de-material-de-constru-o/image/logo159.png"));
+        ImageIcon logo = new ImageIcon("C:\\Users\\Carlos\\git\\sistema-de-material-de-constru-o\\image\\logo512.png"); // substitua pelo caminho correto
+        JLabel logoLabel = new JLabel(new ImageIcon("C:\\Users\\Carlos\\git\\sistema-de-material-de-constru-o\\image\\logo512.png"));
         logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         centerPanel.add(logoLabel, BorderLayout.CENTER);
 
