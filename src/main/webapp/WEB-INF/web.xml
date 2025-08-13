@@ -6,14 +6,137 @@
                              https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
 
   <display-name>Material</display-name>
+	 <!-- Splash -->
+	<servlet>
+	  <servlet-name>WelcomeServlet</servlet-name>
+	  <servlet-class>com.materialsystem.web.WelcomeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>WelcomeServlet</servlet-name>
+	  <url-pattern>/welcome</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Login -->
+	<servlet>
+	  <servlet-name>LoginServlet</servlet-name>
+	  <servlet-class>com.materialsystem.web.LoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>LoginServlet</servlet-name>
+	  <url-pattern>/login</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Home (menu) -->
+	<servlet>
+	  <servlet-name>HomeServlet</servlet-name>
+	  <servlet-class>com.materialsystem.web.HomeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>HomeServlet</servlet-name>
+	  <url-pattern>/home</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Logout -->
+	<servlet>
+	  <servlet-name>LogoutServlet</servlet-name>
+	  <servlet-class>com.materialsystem.web.LogoutServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>LogoutServlet</servlet-name>
+	  <url-pattern>/logout</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Filtro de autenticação (protege as rotas do sistema) -->
+	<filter>
+	  <filter-name>AuthFilter</filter-name>
+	  <filter-class>com.materialsystem.web.AuthFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	  <filter-name>AuthFilter</filter-name>
+	  <url-pattern>/home</url-pattern>
+	</filter-mapping>
+	<filter-mapping><filter-name>AuthFilter</filter-name><url-pattern>/fabricante</url-pattern></filter-mapping>
+	<filter-mapping><filter-name>AuthFilter</filter-name><url-pattern>/produto</url-pattern></filter-mapping>
+	<filter-mapping><filter-name>AuthFilter</filter-name><url-pattern>/venda</url-pattern></filter-mapping>
+	<filter-mapping><filter-name>AuthFilter</filter-name><url-pattern>/estoque</url-pattern></filter-mapping>
+	<filter-mapping><filter-name>AuthFilter</filter-name><url-pattern>/produtoestoque</url-pattern></filter-mapping>
+	<filter-mapping><filter-name>AuthFilter</filter-name><url-pattern>/vendedor</url-pattern></filter-mapping>
+	<filter-mapping><filter-name>AuthFilter</filter-name><url-pattern>/comprador</url-pattern></filter-mapping>
+		 
+	 <servlet>
+	   <servlet-name>FabricanteServlet</servlet-name>
+	   <servlet-class>com.materialsystem.web.FabricanteServlet</servlet-class>
+	 </servlet>
+	 <servlet-mapping>
+	   <servlet-name>FabricanteServlet</servlet-name>
+	   <url-pattern>/fabricante</url-pattern>
+	 </servlet-mapping>
 
-  <servlet>
-    <servlet-name>FabricanteServlet</servlet-name>
-    <servlet-class>com.materialsystem.web.FabricanteServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>FabricanteServlet</servlet-name>
-    <url-pattern>/fabricante</url-pattern>
-  </servlet-mapping>
+	<servlet>
+	  <servlet-name>ProdutoServlet</servlet-name>
+	  <servlet-class>com.materialsystem.web.ProdutoServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>ProdutoServlet</servlet-name>
+	  <url-pattern>/produto</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+	  <servlet-name>VendaServlet</servlet-name>
+	  <servlet-class>com.materialsystem.web.VendaServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>VendaServlet</servlet-name>
+	  <url-pattern>/venda</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+	  <servlet-name>EstoqueServlet</servlet-name>
+	  <servlet-class>com.materialsystem.web.EstoqueServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>EstoqueServlet</servlet-name>
+	  <url-pattern>/estoque</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+	  <servlet-name>ProdutoEstoqueServlet</servlet-name>
+	  <servlet-class>com.materialsystem.web.ProdutoEstoqueServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>ProdutoEstoqueServlet</servlet-name>
+	  <url-pattern>/produtoestoque</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+	  <servlet-name>VendedorServlet</servlet-name>
+	  <servlet-class>com.materialsystem.web.VendedorServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>VendedorServlet</servlet-name>
+	  <url-pattern>/vendedor</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+	  <servlet-name>CompradorServlet</servlet-name>
+	  <servlet-class>com.materialsystem.web.CompradorServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>CompradorServlet</servlet-name>
+	  <url-pattern>/comprador</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+	  <servlet-name>UsuarioServlet</servlet-name>
+	  <servlet-class>com.materialsystem.web.UsuarioServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>UsuarioServlet</servlet-name>
+	  <url-pattern>/usuario</url-pattern>
+	</servlet-mapping>
+	
+
+	
+		
 
 </web-app>

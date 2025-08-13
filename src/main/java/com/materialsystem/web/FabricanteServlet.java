@@ -101,7 +101,7 @@ public class FabricanteServlet extends HttpServlet {
                     break;
 
                 case "exit":
-                    response.sendRedirect(request.getContextPath() + "/index.html");
+                    response.sendRedirect(request.getContextPath() + "/home");
                     return;
 
                 default:
