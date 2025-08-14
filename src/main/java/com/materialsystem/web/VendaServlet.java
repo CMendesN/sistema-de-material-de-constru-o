@@ -1,15 +1,12 @@
 package com.materialsystem.web;
 
-import com.materialsystem.dao.VendaDAO;
-import com.materialsystem.dao.ProdutoDAO;
-import com.materialsystem.dao.VendedorDAO;
-import com.materialsystem.dao.CompradorDAO;
-
+import com.materialsystem.entity.Usuario;
 import com.materialsystem.entity.Venda;
 import com.materialsystem.entity.ItemVenda;
+import com.materialsystem.dao.VendaDAO;
+import com.materialsystem.dao.ProdutoDAO;
 import com.materialsystem.entity.Produto;
-import com.materialsystem.entity.Vendedor;
-import com.materialsystem.entity.Comprador;
+import com.materialsystem.util.Roles;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
@@ -17,15 +14,13 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class VendaServlet extends HttpServlet {
 
     private final VendaDAO vendaDAO = new VendaDAO();
     private final ProdutoDAO produtoDAO = new ProdutoDAO();
-    private final VendedorDAO vendedorDAO = new VendedorDAO();
-    private final CompradorDAO compradorDAO = new CompradorDAO();
 
     private final boolean enableStyleCSS = true;
     private final String versionWebApp = "1.0";
@@ -33,8 +28,9 @@ public class VendaServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        resp.setContentType("text/html; charset=UTF-8");
-        render(req, resp, "Pronto.", null, null, null, false);
+    	resp.setContentType("text/html; charset=UTF-8");
+        mainWindow(req, resp, "Pronto.", false, false, false,
+                   null, Collections.emptyList(), Collections.emptyList());
     }
 
     @Override
@@ -43,183 +39,191 @@ public class VendaServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html; charset=UTF-8");
 
+        Usuario user = (Usuario) req.getSession().getAttribute("usuarioLogado");
+        String papel = user.getPapel();
+        boolean isGerente  = Roles.is(papel, Roles.GERENTE);
+        boolean isVendedor = Roles.is(papel, Roles.VENDEDOR);
+        boolean isCaixa    = Roles.is(papel, Roles.CAIXA);
+        boolean isComprador= Roles.is(papel, Roles.COMPRADOR);
+
+        // Permissões por ação
+        boolean canInsert = isGerente || isVendedor || isCaixa;           // Comprador não insere
+        boolean canRemove = isGerente || isVendedor;                       // Caixa/Comprador não removem
+        boolean canReportAll = isGerente || isVendedor || isCaixa;         // Comprador vê só dele
+
         String action = p(req, "action");
         String status = "Pronto.";
-        List<Venda> vendas = null;
-        List<ItemVenda> itensDaVenda = null;
-        Integer vendaSelecionada = null;
-        boolean mostrarRelatorio = false;
+        boolean showReport = false;
+        boolean showItems  = false;
+        Integer vendaIdToShow = null;
+        List<Venda> vendas = Collections.emptyList();
+        List<ItemVenda> itens = Collections.emptyList();
 
         try {
             switch (action) {
-                case "register": {
-                    // Lê cabeçalho (vendedor/comprador)
+                case "insert": {
+                    if (!canInsert) { status = "Sem permissão para registrar vendas."; break; }
+
+                    // Campos básicos
                     Integer idVendedor = parseIntOrNull(p(req,"NVendaVendedorId"));
                     Integer idComprador = parseIntOrNull(p(req,"NVendaCompradorId"));
 
-                    // Lê arrays de itens
-                    String[] prodIds = req.getParameterValues("itemProdutoId");
-                    String[] qtds    = req.getParameterValues("itemQuantidade");
-                    String[] precos  = req.getParameterValues("itemPreco");
+                    // Comprador logado: força o id_comprador = id do usuário (assumindo mapeamento 1:1)
+                    if (isComprador) idComprador = user.getIdUsuario();
 
-                    List<ItemVenda> itens = new ArrayList<>();
-                    double total = 0.0;
+                    // Itens (arrays)
+                    String[] sProd = req.getParameterValues("NItemProdutoId");
+                    String[] sQtd  = req.getParameterValues("NItemQuantidade");
+                    String[] sPr   = req.getParameterValues("NItemPrecoUnit");
 
-                    if (prodIds != null) {
-                        for (int i = 0; i < prodIds.length; i++) {
-                            int idProduto   = parseIntOrZero(safeIndex(prodIds, i));
-                            int quantidade  = parseIntOrZero(safeIndex(qtds, i));
-                            double preco    = parseDoubleOrZero(safeIndex(precos, i));
-                            if (idProduto > 0 && quantidade > 0 && preco >= 0.0) {
-                                ItemVenda it = new ItemVenda();
-                                it.setIdProduto(idProduto);
-                                it.setQuantidade(quantidade);
-                                it.setPrecoUnitarioVenda(preco);
-                                itens.add(it);
-                                total += quantidade * preco;
-                            }
-                        }
+                    if (sProd == null || sQtd == null || sPr == null) {
+                        status = "Informe ao menos um item."; break;
                     }
 
-                    if (itens.isEmpty()) throw new IllegalArgumentException("Inclua pelo menos 1 item válido.");
+                    List<ItemVenda> list = new ArrayList<>();
+                    double total = 0.0;
+                    for (int i=0; i<sProd.length; i++) {
+                        Integer pid = parseIntOrNull(sProd[i]);
+                        Integer q   = parseIntOrNull(sQtd[i]);
+                        Double  pr  = parseDoubleOrNull(sPr[i]);
+                        if (pid == null || q == null || q <= 0 || pr == null || pr < 0) continue;
+                        ItemVenda it = new ItemVenda(0, 0, pid, q, pr);
+                        list.add(it);
+                        total += q * pr;
+                    }
+                    if (list.isEmpty()) { status = "Itens inválidos."; break; }
 
-                    Venda venda = new Venda(0, LocalDateTime.now(), idVendedor, idComprador, total);
-                    boolean ok = vendaDAO.registrarVendaComItens(venda, itens);
-                    status = ok ? "Venda registrada com sucesso." : "Falha ao registrar a venda.";
+                    Venda v = new Venda(0, LocalDateTime.now(), idVendedor, idComprador, total);
+                    boolean ok = vendaDAO.registrarVendaComItens(v, list);
+                    status = ok ? "Venda registrada com sucesso." : "Erro ao registrar a venda.";
                     break;
                 }
                 case "report": {
-                    mostrarRelatorio = true;
-                    int filtroComprador = parseIntOrZero(p(req,"NFilterCompradorId"));
-                    if (filtroComprador > 0) {
-                        vendas = vendaDAO.buscarPorComprador(filtroComprador);
-                        status = "Relatório filtrado pelo comprador ID " + filtroComprador + ".";
-                    } else {
+                    showReport = true;
+                    if (isComprador) {
+                        // Comprador: só as próprias
+                        vendas = vendaDAO.buscarPorComprador(user.getIdUsuario());
+                        status = "Listando suas compras.";
+                    } else if (canReportAll) {
                         vendas = vendaDAO.buscarTodas();
-                        status = "Relatório de todas as vendas.";
-                    }
-                    break;
-                }
-                case "viewItems": {
-                    vendaSelecionada = parseIntOrZero(p(req,"idVenda"));
-                    if (vendaSelecionada <= 0) {
-                        status = "Informe um ID de venda válido.";
+                        status = "Listando todas as vendas.";
                     } else {
-                        itensDaVenda = vendaDAO.buscarItensPorVenda(vendaSelecionada);
-                        mostrarRelatorio = true;
-                        vendas = vendaDAO.buscarTodas(); // mantém a grade de vendas
-                        status = "Itens da venda " + vendaSelecionada + " listados abaixo.";
+                        status = "Sem permissão para listar vendas.";
+                        showReport = false;
                     }
                     break;
                 }
-                case "remove": {
-                    int idVenda = parseIntOrZero(p(req,"idVenda"));
-                    if (idVenda <= 0) {
-                        status = "Informe um ID de venda válido para excluir.";
-                    } else {
-                        boolean ok = vendaDAO.deletarVenda(idVenda);
-                        status = ok ? "Venda " + idVenda + " excluída." : "Não foi possível excluir a venda " + idVenda + ".";
-                    }
-                    mostrarRelatorio = true;
-                    vendas = vendaDAO.buscarTodas();
-                    break;
-                }
-                case "help":
-                    status = "Ajuda: preencha vendedor/comprador (opcional), adicione itens (produto, qtd, preço) e clique Registrar. Em Relatório, é possível filtrar por comprador, ver itens e excluir a venda.";
-                    break;
+                case "items": {
+                    Integer idParam = parseIntOrNull(p(req,"NVendaId"));
+                    if (idParam == null) { status = "Informe o ID da venda."; break; }
+                    vendaIdToShow = idParam;
 
-                case "exit":
+                    if (isComprador) {
+                        List<Venda> minhas = vendaDAO.buscarPorComprador(user.getIdUsuario());
+                        final int idCheck = vendaIdToShow;              // efetivamente final
+                        boolean ok = minhas.stream().anyMatch(vd -> vd.getIdVenda() == idCheck);
+                        if (!ok) { status = "Sem permissão para ver itens desta venda."; break; }
+                    }
+
+                    itens = vendaDAO.buscarItensPorVenda(vendaIdToShow);
+                    showItems = true;
+                    status = "Itens da venda " + vendaIdToShow + ":";
+                    break;
+                }
+
+                case "remove": {
+                    if (!canRemove) { status = "Sem permissão para excluir venda."; break; }
+                    Integer id = parseIntOrNull(p(req,"NVendaId"));
+                    if (id == null) { status = "Informe o ID da venda."; break; }
+                    boolean ok = vendaDAO.deletarVenda(id);
+                    status = ok ? "Venda excluída." : "Não foi possível excluir.";
+                    break;
+                }
+                case "help": {
+                    status = "Ajuda: Gerente/Vendedor/Caixa registram e listam; Gerente/Vendedor removem; Comprador lista apenas as próprias.";
+                    break;
+                }
+                case "exit": {
                     resp.sendRedirect(req.getContextPath() + "/home");
                     return;
-
+                }
                 default:
                     status = "Ação não reconhecida.";
             }
-        } catch (IllegalArgumentException e) {
-            status = "Validação: " + e.getMessage();
         } catch (Exception e) {
             status = "Erro: " + e.getMessage();
         }
 
-        render(req, resp, status, vendas, itensDaVenda, vendaSelecionada, mostrarRelatorio);
+        mainWindow(req, resp, status, showReport, showItems, canRemove, vendaIdToShow, vendas.isEmpty()? null : vendas, itens);
     }
 
-    /* =================== RENDER =================== */
-    private void render(HttpServletRequest req, HttpServletResponse resp,
-                        String status,
-                        List<Venda> vendas,
-                        List<ItemVenda> itensDaVenda,
-                        Integer vendaSelecionada,
-                        boolean mostrarRelatorio) throws IOException {
+    /* ===== Render ===== */
+    private void mainWindow(HttpServletRequest req, HttpServletResponse resp,
+                            String status,
+                            boolean showReport, boolean showItems, boolean canRemove,
+                            Integer vendaIdToShow,
+                            List<Venda> vendas, List<ItemVenda> itens) throws IOException {
+
+        Usuario user = (Usuario) req.getSession().getAttribute("usuarioLogado");
+        String papel = user.getPapel();
+        boolean isGerente  = Roles.is(papel, Roles.GERENTE);
+        boolean isVendedor = Roles.is(papel, Roles.VENDEDOR);
+        boolean isCaixa    = Roles.is(papel, Roles.CAIXA);
+        boolean isComprador= Roles.is(papel, Roles.COMPRADOR);
+
+        boolean canInsert = isGerente || isVendedor || isCaixa;
 
         String ctx = req.getContextPath();
-        List<Produto> produtos = produtoDAO.buscarTodos();
-        List<Vendedor> vendedores = vendedorDAO.buscarTodos();
-        List<Comprador> compradores = compradorDAO.buscarTodos();
-
         PrintWriter out = resp.getWriter();
+
+        // Produtos para preencher selects dos itens
+        List<Produto> produtos = produtoDAO.buscarTodos();
+        Map<Integer,String> prodNome = produtos.stream().collect(Collectors.toMap(
+                Produto::getIdProduto, Produto::getNome, (a,b)->a, LinkedHashMap::new));
+
         out.println("<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Vendas</title>");
         if (enableStyleCSS) out.println("<link rel='stylesheet' href='" + ctx + "/styleLogin.css'>");
-        out.println("<style> table td,table th{vertical-align:middle} .item-row td{padding:3px} .item-row select,input{min-width:120px} </style>");
-        out.println("</head><body>");
+        out.println("<style>table{border-collapse:collapse} td,th{padding:6px;border:1px solid #aaa} .items td{border:0}</style>");
+        out.println("</head><body><form method='post' target='_self'>");
+        out.println("<h3>Vendas - v" + versionWebApp + " | Logado: " + safe(user.getNome()) + " (" + safe(papel) + ")</h3><br>");
 
-        out.println("<form method='post' target='_self'>");
-        out.println("<h3>Vendas - versão " + versionWebApp + "</h3><br>");
+        // Campos básicos
+        out.println("<div class='block'><label>ID Venda:</label>");
+        out.println("<input type='number' name='NVendaId' style='width:120px;' value='" + (vendaIdToShow==null?"":vendaIdToShow) + "' /></div>");
 
-        /* ===== Cabeçalho (vendedor/comprador) ===== */
-        out.println("<div class='block'><label>Vendedor:</label>");
-        out.println("<select name='NVendaVendedorId' style='width:300px;'>");
-        out.println("<option value=''>-- opcional --</option>");
-        for (Vendedor v : vendedores) {
-            out.println("<option value='" + v.getIdVendedor() + "'>" + safe(v.getNome()) + "</option>");
-        }
-        out.println("</select></div>");
+        out.println("<div class='block'><label>ID Vendedor:</label>");
+        out.println("<input type='number' name='NVendaVendedorId' style='width:120px;' " + (isComprador? "disabled" : "") + " /></div>");
 
-        out.println("<div class='block'><label>Comprador:</label>");
-        out.println("<select name='NVendaCompradorId' style='width:300px;'>");
-        out.println("<option value=''>-- opcional --</option>");
-        for (Comprador c : compradores) {
-            out.println("<option value='" + c.getIdComprador() + "'>" + safe(c.getNome()) + "</option>");
-        }
-        out.println("</select></div>");
+        out.println("<div class='block'><label>ID Comprador:</label>");
+        out.println("<input type='number' name='NVendaCompradorId' style='width:120px;' " +
+                (isComprador? ("value='"+ user.getIdUsuario() +"' readonly") : "") + " /></div>");
 
-        /* ===== Tabela de Itens (dinâmica) ===== */
-        out.println("<div class='block'><label>Itens:</label></div>");
-        out.println("<table id='tbItens' border='1' cellpadding='4'>");
-        out.println("<thead><tr><th>Produto</th><th>Qtd</th><th>Preço Unit.</th><th>Ações</th></tr></thead>");
-        out.println("<tbody id='itensBody'></tbody>");
-        out.println("</table>");
-        out.println("<div class='block'>");
-        out.println("<button type='button' onclick='addItem()'>Adicionar Item</button>");
-        out.println("</div>");
+        // Itens
+        out.println("<hr><h4>Itens da Venda</h4>");
+        out.println("<table class='items'><tbody id='tbodyItems'>");
+        out.println(rowItem(produtos)); // primeira linha
+        out.println("</tbody></table>");
+        out.println("<button type='button' onclick='addRow()'>Adicionar Item</button>");
 
-        /* ===== Status ===== */
+        // Status
         out.println("<div class='block'><label>Status:</label>");
-        out.println("<input value='" + safe(status) + "' type='text' readonly style='width:600px;'/></div>");
+        out.println("<input value='" + safe(status) + "' type='text' readonly style='width:600px;' /></div>");
 
-        /* ===== Botões ===== */
+        // Botões
         out.println("<div class='block'>");
-        out.println("<button type='submit' formaction='" + ctx + "/venda' name='action' value='register' style='width:140px;'>Registrar Venda</button>");
-        out.println("<button type='submit' formaction='" + ctx + "/venda' name='action' value='report' style='width:110px;' formnovalidate>Relatório</button>");
+        out.println("<button type='submit' formaction='" + ctx + "/venda' name='action' value='insert' style='width:130px;' "+ (canInsert? "":"disabled") +">Registrar Venda</button>");
+        out.println("<button type='submit' formaction='" + ctx + "/venda' name='action' value='report' style='width:130px;' formnovalidate>Listar Vendas</button>");
+        out.println("<button type='submit' formaction='" + ctx + "/venda' name='action' value='items' style='width:130px;' formnovalidate>Ver Itens</button>");
+        out.println("<button type='submit' formaction='" + ctx + "/venda' name='action' value='remove' style='width:130px;' " + (canRemove? "" : "disabled") + ">Excluir Venda</button>");
         out.println("<button type='submit' formaction='" + ctx + "/venda' name='action' value='help' style='width:110px;' formnovalidate>Ajuda</button>");
         out.println("<button type='submit' formaction='" + ctx + "/venda' name='action' value='exit' style='width:110px;' formnovalidate>Sair</button>");
         out.println("</div>");
 
-        /* ===== Relatório (lista de vendas) ===== */
-        if (mostrarRelatorio) {
-            if (vendas == null) vendas = vendaDAO.buscarTodas();
-
-            out.println("<hr><h4>Relatório de Vendas</h4>");
-            out.println("<div class='block'>");
-            out.println("<form method='post' target='_self' style='display:inline;'>");
-            out.println("<label>Filtrar Comprador ID:</label>");
-            out.println("<input type='number' min='1' name='NFilterCompradorId' style='width:120px;'/>");
-            out.println("<button type='submit' formaction='" + ctx + "/venda' name='action' value='report' formnovalidate>Aplicar</button>");
-            out.println("</form>");
-            out.println("</div>");
-
+        // Relatório de vendas
+        if (showReport && vendas != null) {
+            out.println("<hr><h4>Lista de Vendas</h4>");
             out.println("<table border='1' cellpadding='5'>");
-            out.println("<tr><th>ID</th><th>Data</th><th>ID Vendedor</th><th>ID Comprador</th><th>Valor Total</th><th>Ações</th></tr>");
+            out.println("<tr><th>ID</th><th>Data</th><th>Vendedor</th><th>Comprador</th><th>Total (R$)</th></tr>");
             for (Venda v : vendas) {
                 out.println("<tr>");
                 out.println("<td>"+ v.getIdVenda() +"</td>");
@@ -227,93 +231,65 @@ public class VendaServlet extends HttpServlet {
                 out.println("<td>"+ safe(v.getIdVendedor()) +"</td>");
                 out.println("<td>"+ safe(v.getIdComprador()) +"</td>");
                 out.println("<td>"+ String.format(java.util.Locale.US, "%.2f", v.getValorTotal()) +"</td>");
-                out.println("<td>");
-                out.println("<form method='post' target='_self' style='display:inline;'>");
-                out.println("<input type='hidden' name='idVenda' value='"+ v.getIdVenda() +"'/>");
-                out.println("<button type='submit' formaction='" + ctx + "/venda' name='action' value='viewItems'>Ver Itens</button>");
-                out.println("</form>");
-                out.println("&nbsp;");
-                out.println("<form method='post' target='_self' style='display:inline;' onsubmit=\"return confirm('Excluir venda "+v.getIdVenda()+"?')\">");
-                out.println("<input type='hidden' name='idVenda' value='"+ v.getIdVenda() +"'/>");
-                out.println("<button type='submit' formaction='" + ctx + "/venda' name='action' value='remove'>Excluir</button>");
-                out.println("</form>");
-                out.println("</td>");
                 out.println("</tr>");
             }
             out.println("</table>");
+        }
 
-            /* Detalhe de itens de uma venda selecionada */
-            if (itensDaVenda != null && vendaSelecionada != null) {
-                out.println("<h5>Itens da Venda " + vendaSelecionada + "</h5>");
-                out.println("<table border='1' cellpadding='5'>");
-                out.println("<tr><th>ID Item</th><th>ID Produto</th><th>Quantidade</th><th>Preço Unit.</th></tr>");
-                for (ItemVenda it : itensDaVenda) {
-                    out.println("<tr>");
-                    out.println("<td>"+ it.getIdItemVenda() +"</td>");
-                    out.println("<td>"+ it.getIdProduto() +"</td>");
-                    out.println("<td>"+ it.getQuantidade() +"</td>");
-                    out.println("<td>"+ String.format(java.util.Locale.US, "%.2f", it.getPrecoUnitarioVenda()) +"</td>");
-                    out.println("</tr>");
-                }
-                out.println("</table>");
+        // Itens de uma venda
+        if (showItems && itens != null) {
+            out.println("<hr><h4>Itens da Venda " + vendaIdToShow + "</h4>");
+            out.println("<table border='1' cellpadding='5'>");
+            out.println("<tr><th>Produto</th><th>Qtd</th><th>Preço Unit</th><th>Subtotal</th></tr>");
+            for (ItemVenda it : itens) {
+                String nome = prodNome.getOrDefault(it.getIdProduto(), "ID " + it.getIdProduto());
+                double sub = it.getQuantidade() * it.getPrecoUnitarioVenda();
+                out.println("<tr>");
+                out.println("<td>"+ safe(nome) +"</td>");
+                out.println("<td>"+ it.getQuantidade() +"</td>");
+                out.println("<td>"+ String.format(java.util.Locale.US, "%.2f", it.getPrecoUnitarioVenda()) +"</td>");
+                out.println("<td>"+ String.format(java.util.Locale.US, "%.2f", sub) +"</td>");
+                out.println("</tr>");
             }
+            out.println("</table>");
         }
 
-        /* ===== Template/JS para adicionar itens ===== */
-        out.println("<template id='tplItem'>");
-        out.println("<tr class='item-row'>");
-        out.println("<td><select name='itemProdutoId' class='prodSel'>");
-        out.println("<option value=''>-- selecione --</option>");
-        for (Produto pr : produtos) {
-            // usa data-preco para sugerir preço padrão
-            out.println("<option value='"+ pr.getIdProduto() +"' data-preco='"+ pr.getPrecoUnitario() +"'>"
-                    + safe(pr.getNome()) + "</option>");
-        }
-        out.println("</select></td>");
-        out.println("<td><input type='number' name='itemQuantidade' min='1' step='1' value='1' /></td>");
-        out.println("<td><input type='number' name='itemPreco' min='0' step='0.01' value='0.00' /></td>");
-        out.println("<td><button type='button' onclick='rmItem(this)'>Remover</button></td>");
-        out.println("</tr>");
-        out.println("</template>");
-
+        // JS para adicionar linhas de itens
         out.println("<script>");
-        out.println("function addItem(){");
-        out.println("  const tpl=document.getElementById('tplItem');");
-        out.println("  const row=tpl.content.firstElementChild.cloneNode(true);");
-        out.println("  // ao trocar produto, setar preço padrão (se existir)");
-        out.println("  row.querySelector('.prodSel').addEventListener('change', function(){");
-        out.println("    const opt=this.selectedOptions[0]; if(!opt) return;");
-        out.println("    const preco=opt.getAttribute('data-preco'); if(preco){");
-        out.println("      const input= row.querySelector(\"input[name='itemPreco']\");");
-        out.println("      if(input && (!input.value || parseFloat(input.value)==0)) input.value=preco;");
-        out.println("    }");
-        out.println("  });");
-        out.println("  document.getElementById('itensBody').appendChild(row);");
+        out.println("function addRow(){");
+        out.println("  var tb = document.getElementById('tbodyItems');");
+        out.println("  var tr = document.createElement('tr');");
+        out.println("  tr.innerHTML = `" + jsEscape(rowItem(produtos)) + "`;");
+        out.println("  tb.appendChild(tr);");
         out.println("}");
-        out.println("function rmItem(btn){ const tr=btn.closest('tr'); if(tr) tr.remove(); }");
-        out.println("// adiciona uma linha inicial");
-        out.println("if(document.getElementById('itensBody').children.length===0) addItem();");
         out.println("</script>");
 
         out.println("</form></body></html>");
     }
 
-    /* =================== helpers =================== */
-    private static String p(HttpServletRequest req, String name) {
-        String v = req.getParameter(name); return v==null? "" : v.trim();
+    /* ===== Helpers ===== */
+    private static String p(HttpServletRequest r, String n){ String v = r.getParameter(n); return v==null? "" : v.trim(); }
+    private static Integer parseIntOrNull(String s){ try{ if(s==null||s.isBlank())return null; return Integer.parseInt(s);}catch(Exception e){return null;} }
+    private static Double parseDoubleOrNull(String s){ try{ if(s==null||s.isBlank())return null; s=s.replace(',','.'); return Double.parseDouble(s);}catch(Exception e){return null;} }
+    private static String safe(Object v){ return v==null? "" : String.valueOf(v).replace("\"","&quot;"); }
+
+    private String rowItem(List<Produto> produtos){
+        StringBuilder sb = new StringBuilder();
+        sb.append("<tr>");
+        sb.append("<td><select name='NItemProdutoId' required>");
+        sb.append("<option value=''>-- produto --</option>");
+        for (Produto p : produtos) {
+            sb.append("<option value='").append(p.getIdProduto()).append("'>")
+              .append(safe(p.getNome())).append("</option>");
+        }
+        sb.append("</select></td>");
+        sb.append("<td><input type='number' name='NItemQuantidade' min='1' step='1' style='width:100px;' required/></td>");
+        sb.append("<td><input type='number' name='NItemPrecoUnit' min='0' step='0.01' style='width:120px;' required/></td>");
+        sb.append("</tr>");
+        return sb.toString();
     }
-    private static String safe(Object v){
-        return v==null? "" : String.valueOf(v).replace("\"","&quot;");
+
+    private static String jsEscape(String html){
+        return html.replace("`","\\`").replace("\\","\\\\");
     }
-    private static int parseIntOrZero(String s){ try { return Integer.parseInt(s); } catch(Exception e){ return 0; } }
-    private static Integer parseIntOrNull(String s){
-        if(s==null || s.isBlank()) return null;
-        try { return Integer.valueOf(s); } catch(Exception e){ return null; }
-    }
-    private static double parseDoubleOrZero(String s){
-        if(s==null || s.isBlank()) return 0.0;
-        s = s.replace(",", ".");
-        try { return Double.parseDouble(s); } catch(Exception e){ return 0.0; }
-    }
-    private static String safeIndex(String[] arr, int i){ return (arr!=null && i>=0 && i<arr.length) ? arr[i] : ""; }
 }
